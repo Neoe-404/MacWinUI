@@ -71,57 +71,124 @@ application discovery and launching are isolated in `MacWinUI.Windows`.
 ## Requirements
 
 - Windows 10 or Windows 11 x64
-- .NET 8 SDK
+- Git and PowerShell 7 (for source-based deployment)
+- .NET 8 SDK (for build and development)
+- .NET 8 Desktop Runtime x64 (for the framework-dependent published build)
 
-## Build, test, and run
+## Deployment
+
+### 1. Clone the repository
+
+```powershell
+git clone https://github.com/Neoe-404/MacWinUI.git
+Set-Location .\MacWinUI
+```
+
+MacWinUI is Windows-only. Build and run it from a normal, non-administrator
+PowerShell session.
+
+### 2. Restore, build, and verify
 
 ```powershell
 dotnet restore .\MacWinUI.sln
-dotnet build .\MacWinUI.sln
-dotnet test .\MacWinUI.sln
-dotnet run --project .\src\MacWinUI.App\MacWinUI.App.csproj
+dotnet build .\MacWinUI.sln -c Release
+dotnet test .\MacWinUI.sln -c Release --no-build
 ```
 
-The Dock prefers cached Windows Shell icons and falls back to stable glyphs when
-an executable icon is unavailable.
+### 3. Publish a deployable folder
 
-The default visual preset for a new profile is `BigSur`. Existing profiles keep
-their saved theme; select `BigSur` in Control Center → Appearance to apply the
-light frosted menu bar and Dock presentation.
-
-The MenuBar labels are interactive. Use `File` to open Explorer or add Dock
-items, `View` to switch themes and magnification, `Go` for common folders,
-`Window` to restore MacWinUI placement, and `Help` for drag-and-drop guidance.
-
-Right-click any Dock item to open it, reveal its containing folder, or remove it
-from the visible Dock. Right-click the empty Dock surface to add items, open Dock
-settings, toggle magnification, restore the Dock position, or recover hidden
-default items.
-
-`Reserve screen space` is enabled by default in Control Center. It registers the
-MenuBar with the supported Windows AppBar API so maximized windows begin below
-it. Turning the option off or exiting MacWinUI releases the reservation and
-restores the original desktop work area.
-
-Create a verified framework-dependent release with:
+The repository includes a script that runs Release build, tests, and publish in
+that order:
 
 ```powershell
 .\scripts\publish.ps1
 ```
 
-The output is written to `artifacts\publish` after Release build and tests pass.
+The framework-dependent output is created in `artifacts\publish`. Start it with:
 
-MacWinUI can be closed from the top application menu, the empty Dock context
-menu, or the bottom of Control Center. Every entry asks for confirmation and
-uses the normal shutdown path so settings and reserved screen space are restored.
+```powershell
+.\artifacts\publish\MacWinUI.App.exe
+```
 
-To add your own application, open Control Center from the top MenuBar, find
-**Dock Items**, select **Add…**, and choose an application or file. You can also
-drag files or applications onto the empty Dock surface to pin them. Drop a file
-directly onto a compatible application icon to open it with that application.
-Custom items can be removed from the same Control Center section. The selection
-is stored for the current user in `%LocalAppData%\MacWinUI\dock-apps.json`.
+Do not copy only the `.exe`; keep all files in the publish folder together. The
+current format requires the .NET 8 Desktop Runtime x64 on the target computer.
 
+### 4. Development run
+
+```powershell
+dotnet run --project .\src\MacWinUI.App\MacWinUI.App.csproj
+```
+
+MacWinUI allows one running instance per Windows session. Close the existing
+instance before testing a newly built version.
+
+### 5. Optional startup shortcut
+
+1. Press `Win+R` and open `shell:startup`.
+2. Create a shortcut to the published `MacWinUI.App.exe`.
+3. Keep the publish folder at a stable path.
+
+This requires no administrator privileges and is reversed by deleting the
+shortcut.
+
+### 6. Upgrade
+
+1. Quit MacWinUI through the MenuBar, Dock context menu, or Control Center.
+2. Back up `%LocalAppData%\MacWinUI` if the layout is important.
+3. Pull or download the newer source and publish it into a new folder.
+4. Replace the old publish folder, then start the new executable.
+
+Settings use versioned schemas. Previous valid files are preserved with
+`.backup` or `.broken` suffixes when recovery is needed.
+
+### 7. Configuration and recovery
+
+Per-user state is stored in:
+
+```text
+%LocalAppData%\MacWinUI\appearance.json
+%LocalAppData%\MacWinUI\dock-apps.json
+```
+
+Use Control Center to export or import a portable `.macwinui.json` bundle. If a
+layout is damaged, use **Reset preferences** or restore a `.backup` file while
+MacWinUI is not running.
+
+If the MenuBar reservation is not desired, disable **Reserve screen space** in
+Control Center. A normal exit releases the AppBar and restores the Windows work
+area.
+
+### 8. Uninstall
+
+1. Quit MacWinUI normally so its AppBar reservation is released.
+2. Remove any shortcut from `shell:startup`.
+3. Delete the cloned or published application folder.
+4. Optionally delete `%LocalAppData%\MacWinUI` to remove personal settings.
+
+MacWinUI does not replace Explorer, hide the native Windows taskbar, install a
+service, modify system DLLs, or require registry cleanup.
+
+### Troubleshooting
+
+- **Nothing happens when starting:** quit the already-running instance first.
+- **Missing .NET error:** install the .NET 8 Desktop Runtime x64 or build with the
+  .NET 8 SDK.
+- **MenuBar overlaps window controls:** enable **Reserve screen space**, then use
+  `Window → Reposition MacWinUI Windows`.
+- **Application icon is generic:** restart MacWinUI to retry Shell extraction.
+- **Display/DPI issue:** open `Help → Runtime Diagnostics` and record the render
+  tier, DPI scale, work area, and AppBar status.
+## Usage
+
+- Select `BigSur`, `Auto`, `Light`, or `Dark` in Control Center → Appearance.
+- Drag applications or files onto the empty Dock surface to pin them.
+- Drop files directly onto compatible application icons to open them.
+- Drag Dock icons to reorder them; drag an icon out of the Dock to remove it.
+- Right-click a Dock item for open, window activation, reveal, and remove actions.
+- Right-click the empty Dock for add, settings, auto-hide, restore, and quit actions.
+- Use **Reserve screen space** to keep maximized window controls below the MenuBar.
+- Quit through the application menu, Dock context menu, or Control Center so
+  settings are saved and the AppBar reservation is released.
 ## Development mode
 
 Development is incremental. Existing working functionality is the baseline and
