@@ -1,5 +1,7 @@
 # MacWinUI
 
+[![.NET Desktop CI](https://github.com/Neoe-404/MacWinUI/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/Neoe-404/MacWinUI/actions/workflows/dotnet-desktop.yml)
+
 MacWinUI is a safe, macOS-inspired desktop enhancement for Windows 10 and
 Windows 11. It runs above the normal Windows shell and does not replace
 `explorer.exe`, hide the Windows taskbar, modify system files, or require
