@@ -1,0 +1,17 @@
+# Build output
+bin/
+obj/
+artifacts/
+
+# Local SDK and isolated CLI state used in this workspace
+.dotnet/
+.dotnet-home/
+.nuget/
+.appdata/
+dotnet-install.ps1
+
+# Visual Studio and Rider
+.vs/
+.idea/
+*.user
+*.suo

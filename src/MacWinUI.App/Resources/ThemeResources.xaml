@@ -1,0 +1,214 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Big Sur-inspired glass palette. This is the default visual presentation. -->
+    <LinearGradientBrush x:Key="BigSurDockBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#E6E9E5F8" Offset="0" />
+        <GradientStop Color="#D9CFC9EF" Offset="0.50" />
+        <GradientStop Color="#CCB8B0DD" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="BigSurDockBorderBrush" Color="#47FFFFFF" />
+    <SolidColorBrush x:Key="BigSurDockHoverBrush" Color="#4DFFFFFF" />
+    <SolidColorBrush x:Key="BigSurDockIndicatorBrush" Color="#A61C2330" />
+    <SolidColorBrush x:Key="BigSurDockActiveIndicatorBrush" Color="#E61C2330" />
+    <SolidColorBrush x:Key="BigSurDockSeparatorBrush" Color="#3D252A35" />
+    <SolidColorBrush x:Key="BigSurPrimaryTextBrush" Color="#FF18151D" />
+    <SolidColorBrush x:Key="BigSurSecondaryTextBrush" Color="#A61E1B24" />
+    <SolidColorBrush x:Key="BigSurDockItemBackgroundBrush" Color="#00FFFFFF" />
+    <SolidColorBrush x:Key="BigSurDockIconPlateBrush" Color="#30FFFFFF" />
+    <SolidColorBrush x:Key="BigSurDockTooltipBackgroundBrush" Color="#F7F3EFFA" />
+    <LinearGradientBrush x:Key="BigSurDockGlassHighlightBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#E8FFFFFF" Offset="0" />
+        <GradientStop Color="#59FFFFFF" Offset="0.36" />
+        <GradientStop Color="#0DFFFFFF" Offset="0.82" />
+    </LinearGradientBrush>
+    <Color x:Key="BigSurDockShadowColor">#5C25124F</Color>
+    <Color x:Key="BigSurDockIconShadowColor">#4D271544</Color>
+    <LinearGradientBrush x:Key="BigSurMenuBarBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#EDF8F1FA" Offset="0" />
+        <GradientStop Color="#E3E8DCEC" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="BigSurMenuBarBorderBrush" Color="#1F201728" />
+    <SolidColorBrush x:Key="BigSurMenuBarTextBrush" Color="#FF16121A" />
+    <SolidColorBrush x:Key="BigSurMenuBarHoverBrush" Color="#261B1422" />
+    <LinearGradientBrush x:Key="BigSurControlCenterBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#F5F8F4FA" Offset="0" />
+        <GradientStop Color="#EFE9E3EF" Offset="0.60" />
+        <GradientStop Color="#E8D9D2E4" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="BigSurControlCenterBorderBrush" Color="#2E201A25" />
+    <SolidColorBrush x:Key="BigSurControlCenterCardBrush" Color="#BFFFFFFF" />
+    <SolidColorBrush x:Key="BigSurControlCenterCardHoverBrush" Color="#EBFFFFFF" />
+    <SolidColorBrush x:Key="BigSurControlCenterCardPressedBrush" Color="#9EE4DDE8" />
+    <SolidColorBrush x:Key="BigSurControlCenterIconSurfaceBrush" Color="#1F201825" />
+    <SolidColorBrush x:Key="BigSurControlCenterDividerBrush" Color="#24201825" />
+    <SolidColorBrush x:Key="BigSurControlCenterAccentBrush" Color="#FF087BFF" />
+    <SolidColorBrush x:Key="BigSurControlCenterSuccessBrush" Color="#FF34C759" />
+    <SolidColorBrush x:Key="BigSurControlCenterDangerBrush" Color="#FFFF3B30" />
+    <SolidColorBrush x:Key="BigSurControlCenterSliderTrackBrush" Color="#2B211A27" />
+    <SolidColorBrush x:Key="BigSurControlCenterSliderThumbBrush" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="BigSurControlCenterSelectedTextBrush" Color="#FFFFFFFF" />
+    <LinearGradientBrush x:Key="BigSurControlCenterHighlightBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#E8FFFFFF" Offset="0" />
+        <GradientStop Color="#47FFFFFF" Offset="0.36" />
+        <GradientStop Color="#00FFFFFF" Offset="0.78" />
+    </LinearGradientBrush>
+
+    <!-- Dark palette -->
+    <LinearGradientBrush x:Key="DarkDockBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#F21C232D" Offset="0" />
+        <GradientStop Color="#F0121821" Offset="0.52" />
+        <GradientStop Color="#F0080D14" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="DarkDockBorderBrush" Color="#66758092" />
+    <SolidColorBrush x:Key="DarkDockHoverBrush" Color="#334A586B" />
+    <SolidColorBrush x:Key="DarkDockIndicatorBrush" Color="#D9E9EEF5" />
+    <SolidColorBrush x:Key="DarkDockActiveIndicatorBrush" Color="#FF2F8BFF" />
+    <SolidColorBrush x:Key="DarkDockSeparatorBrush" Color="#526A7585" />
+    <SolidColorBrush x:Key="DarkPrimaryTextBrush" Color="#FFF4F7FB" />
+    <SolidColorBrush x:Key="DarkSecondaryTextBrush" Color="#BFC3CAD4" />
+    <SolidColorBrush x:Key="DarkDockItemBackgroundBrush" Color="#00FFFFFF" />
+    <SolidColorBrush x:Key="DarkDockIconPlateBrush" Color="#14FFFFFF" />
+    <SolidColorBrush x:Key="DarkDockTooltipBackgroundBrush" Color="#FA111820" />
+    <LinearGradientBrush x:Key="DarkDockGlassHighlightBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#4DFFFFFF" Offset="0" />
+        <GradientStop Color="#147FA5CF" Offset="0.30" />
+        <GradientStop Color="#00FFFFFF" Offset="0.75" />
+    </LinearGradientBrush>
+    <Color x:Key="DarkDockShadowColor">#B8000000</Color>
+    <Color x:Key="DarkDockIconShadowColor">#99000000</Color>
+    <LinearGradientBrush x:Key="DarkMenuBarBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FA06172E" Offset="0" />
+        <GradientStop Color="#F7021024" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="DarkMenuBarBorderBrush" Color="#4D50637A" />
+    <SolidColorBrush x:Key="DarkMenuBarTextBrush" Color="#FFF4F7FB" />
+    <SolidColorBrush x:Key="DarkMenuBarHoverBrush" Color="#40556B86" />
+    <LinearGradientBrush x:Key="DarkControlCenterBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#F91E232A" Offset="0" />
+        <GradientStop Color="#F8171B21" Offset="0.58" />
+        <GradientStop Color="#F712151A" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="DarkControlCenterBorderBrush" Color="#66575E68" />
+    <SolidColorBrush x:Key="DarkControlCenterCardBrush" Color="#E820242A" />
+    <SolidColorBrush x:Key="DarkControlCenterCardHoverBrush" Color="#F02A3038" />
+    <SolidColorBrush x:Key="DarkControlCenterCardPressedBrush" Color="#E3161A1F" />
+    <SolidColorBrush x:Key="DarkControlCenterIconSurfaceBrush" Color="#FF3B414A" />
+    <SolidColorBrush x:Key="DarkControlCenterDividerBrush" Color="#4D555D67" />
+    <SolidColorBrush x:Key="DarkControlCenterAccentBrush" Color="#FF1473E6" />
+    <SolidColorBrush x:Key="DarkControlCenterSuccessBrush" Color="#FF30D158" />
+    <SolidColorBrush x:Key="DarkControlCenterDangerBrush" Color="#FFFF453A" />
+    <SolidColorBrush x:Key="DarkControlCenterSliderTrackBrush" Color="#FF4A4E54" />
+    <SolidColorBrush x:Key="DarkControlCenterSliderThumbBrush" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="DarkControlCenterSelectedTextBrush" Color="#FFFFFFFF" />
+    <LinearGradientBrush x:Key="DarkControlCenterHighlightBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#2FFFFFFF" Offset="0" />
+        <GradientStop Color="#127C8DA3" Offset="0.30" />
+        <GradientStop Color="#00FFFFFF" Offset="0.72" />
+    </LinearGradientBrush>
+
+    <!-- Light palette -->
+    <LinearGradientBrush x:Key="LightDockBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFF8FAFD" Offset="0" />
+        <GradientStop Color="#FFE7ECF2" Offset="0.52" />
+        <GradientStop Color="#FFD9E0E8" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="LightDockBorderBrush" Color="#38000000" />
+    <SolidColorBrush x:Key="LightDockHoverBrush" Color="#16000000" />
+    <SolidColorBrush x:Key="LightDockIndicatorBrush" Color="#8A1D2430" />
+    <SolidColorBrush x:Key="LightDockActiveIndicatorBrush" Color="#FF1473E6" />
+    <SolidColorBrush x:Key="LightDockSeparatorBrush" Color="#26000000" />
+    <SolidColorBrush x:Key="LightPrimaryTextBrush" Color="#FF181B20" />
+    <SolidColorBrush x:Key="LightSecondaryTextBrush" Color="#A6181B20" />
+    <SolidColorBrush x:Key="LightDockItemBackgroundBrush" Color="#00000000" />
+    <SolidColorBrush x:Key="LightDockIconPlateBrush" Color="#2BFFFFFF" />
+    <SolidColorBrush x:Key="LightDockTooltipBackgroundBrush" Color="#F8FFFFFF" />
+    <LinearGradientBrush x:Key="LightDockGlassHighlightBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#D9FFFFFF" Offset="0" />
+        <GradientStop Color="#5CFFFFFF" Offset="0.32" />
+        <GradientStop Color="#00FFFFFF" Offset="0.78" />
+    </LinearGradientBrush>
+    <Color x:Key="LightDockShadowColor">#52000000</Color>
+    <Color x:Key="LightDockIconShadowColor">#4D000000</Color>
+    <LinearGradientBrush x:Key="LightMenuBarBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#F7F5F8FC" Offset="0" />
+        <GradientStop Color="#F2E6ECF3" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="LightMenuBarBorderBrush" Color="#1F000000" />
+    <SolidColorBrush x:Key="LightMenuBarTextBrush" Color="#FF17191D" />
+    <SolidColorBrush x:Key="LightMenuBarHoverBrush" Color="#12000000" />
+    <LinearGradientBrush x:Key="LightControlCenterBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FAFFFFFF" Offset="0" />
+        <GradientStop Color="#F6F2F2F4" Offset="0.58" />
+        <GradientStop Color="#F5EAEAED" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="LightControlCenterBorderBrush" Color="#2B000000" />
+    <SolidColorBrush x:Key="LightControlCenterCardBrush" Color="#BFFFFFFF" />
+    <SolidColorBrush x:Key="LightControlCenterCardHoverBrush" Color="#E8FFFFFF" />
+    <SolidColorBrush x:Key="LightControlCenterCardPressedBrush" Color="#A8FFFFFF" />
+    <SolidColorBrush x:Key="LightControlCenterIconSurfaceBrush" Color="#14000000" />
+    <SolidColorBrush x:Key="LightControlCenterDividerBrush" Color="#1F000000" />
+    <SolidColorBrush x:Key="LightControlCenterAccentBrush" Color="#FF1473E6" />
+    <SolidColorBrush x:Key="LightControlCenterSuccessBrush" Color="#FF34C759" />
+    <SolidColorBrush x:Key="LightControlCenterDangerBrush" Color="#FFFF3B30" />
+    <SolidColorBrush x:Key="LightControlCenterSliderTrackBrush" Color="#26000000" />
+    <SolidColorBrush x:Key="LightControlCenterSliderThumbBrush" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="LightControlCenterSelectedTextBrush" Color="#FFFFFFFF" />
+    <LinearGradientBrush x:Key="LightControlCenterHighlightBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#F0FFFFFF" Offset="0" />
+        <GradientStop Color="#50FFFFFF" Offset="0.32" />
+        <GradientStop Color="#00FFFFFF" Offset="0.74" />
+    </LinearGradientBrush>
+
+    <!-- Semantic resources; Dark is the stable startup fallback. -->
+    <LinearGradientBrush x:Key="DockBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#F21C232D" Offset="0" />
+        <GradientStop Color="#F0121821" Offset="0.52" />
+        <GradientStop Color="#F0080D14" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="DockBorderBrush" Color="#66758092" />
+    <SolidColorBrush x:Key="DockHoverBrush" Color="#334A586B" />
+    <SolidColorBrush x:Key="DockIndicatorBrush" Color="#D9E9EEF5" />
+    <SolidColorBrush x:Key="DockActiveIndicatorBrush" Color="#FF2F8BFF" />
+    <SolidColorBrush x:Key="DockSeparatorBrush" Color="#526A7585" />
+    <SolidColorBrush x:Key="PrimaryTextBrush" Color="#FFF4F7FB" />
+    <SolidColorBrush x:Key="SecondaryTextBrush" Color="#BFC3CAD4" />
+    <SolidColorBrush x:Key="DockItemBackgroundBrush" Color="#00FFFFFF" />
+    <SolidColorBrush x:Key="DockIconPlateBrush" Color="#14FFFFFF" />
+    <SolidColorBrush x:Key="DockTooltipBackgroundBrush" Color="#FA111820" />
+    <LinearGradientBrush x:Key="DockGlassHighlightBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#4DFFFFFF" Offset="0" />
+        <GradientStop Color="#147FA5CF" Offset="0.30" />
+        <GradientStop Color="#00FFFFFF" Offset="0.75" />
+    </LinearGradientBrush>
+    <Color x:Key="DockShadowColor">#B8000000</Color>
+    <Color x:Key="DockIconShadowColor">#99000000</Color>
+    <LinearGradientBrush x:Key="MenuBarBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FA06172E" Offset="0" />
+        <GradientStop Color="#F7021024" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="MenuBarBorderBrush" Color="#4D50637A" />
+    <SolidColorBrush x:Key="MenuBarTextBrush" Color="#FFF4F7FB" />
+    <SolidColorBrush x:Key="MenuBarHoverBrush" Color="#40556B86" />
+    <LinearGradientBrush x:Key="ControlCenterBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#F91E232A" Offset="0" />
+        <GradientStop Color="#F8171B21" Offset="0.58" />
+        <GradientStop Color="#F712151A" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ControlCenterBorderBrush" Color="#66575E68" />
+    <SolidColorBrush x:Key="ControlCenterCardBrush" Color="#E820242A" />
+    <SolidColorBrush x:Key="ControlCenterCardHoverBrush" Color="#F02A3038" />
+    <SolidColorBrush x:Key="ControlCenterCardPressedBrush" Color="#E3161A1F" />
+    <SolidColorBrush x:Key="ControlCenterIconSurfaceBrush" Color="#FF3B414A" />
+    <SolidColorBrush x:Key="ControlCenterDividerBrush" Color="#4D555D67" />
+    <SolidColorBrush x:Key="ControlCenterAccentBrush" Color="#FF1473E6" />
+    <SolidColorBrush x:Key="ControlCenterSuccessBrush" Color="#FF30D158" />
+    <SolidColorBrush x:Key="ControlCenterDangerBrush" Color="#FFFF453A" />
+    <SolidColorBrush x:Key="ControlCenterSliderTrackBrush" Color="#FF4A4E54" />
+    <SolidColorBrush x:Key="ControlCenterSliderThumbBrush" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="ControlCenterSelectedTextBrush" Color="#FFFFFFFF" />
+    <LinearGradientBrush x:Key="ControlCenterHighlightBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#2FFFFFFF" Offset="0" />
+        <GradientStop Color="#127C8DA3" Offset="0.30" />
+        <GradientStop Color="#00FFFFFF" Offset="0.72" />
+    </LinearGradientBrush>
+</ResourceDictionary>

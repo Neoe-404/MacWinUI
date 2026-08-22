@@ -1,0 +1,108 @@
+<UserControl x:Class="MacWinUI.App.Controls.DockItemControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="ControlRoot"
+             Background="Transparent"
+             UseLayoutRounding="True"
+             SnapsToDevicePixels="True"
+             IsHitTestVisible="True"
+             AllowDrop="True"
+             PreviewMouseLeftButtonDown="OnPreviewMouseLeftButtonDown"
+             PreviewMouseMove="OnPreviewMouseMove"
+             QueryContinueDrag="OnQueryContinueDrag"
+             PreviewDragOver="OnFileDragOver"
+             PreviewDragLeave="OnFileDragLeave"
+             PreviewDrop="OnFileDrop"
+             PreviewMouseRightButtonUp="OnContextRequested">
+    <Grid>
+        <Grid x:Name="ScaleRoot"
+              Width="{Binding IconSize, ElementName=ControlRoot}"
+              Height="{Binding IconSize, ElementName=ControlRoot}"
+              Margin="0,0,0,8"
+              VerticalAlignment="Bottom"
+              RenderTransformOrigin="0.5,1">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform x:Name="IconScale" ScaleX="1" ScaleY="1" />
+                    <TranslateTransform x:Name="IconTranslate" Y="0" />
+                    <TranslateTransform x:Name="ClickTranslate" Y="0" />
+                </TransformGroup>
+            </Grid.RenderTransform>
+
+            <Button Style="{StaticResource DockItemButtonStyle}"
+                    AutomationProperties.Name="{Binding DisplayName}"
+                    Click="OnItemClick">
+                <Button.ToolTip>
+                    <ToolTip Content="{Binding DisplayName}"
+                             Style="{StaticResource DockToolTipStyle}" />
+                </Button.ToolTip>
+                <Border Margin="2">
+                    <Border.Style>
+                        <Style TargetType="Border"
+                               BasedOn="{StaticResource DockIconTileStyle}">
+                            <Setter Property="Background" Value="{DynamicResource DockIconPlateBrush}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IconPngData}" Value="{x:Null}">
+                                    <Setter Property="Background" Value="{Binding AccentColor}" />
+                                    <Setter Property="BorderBrush" Value="{DynamicResource DockBorderBrush}" />
+                                    <Setter Property="BorderThickness" Value="1" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <Grid>
+                        <Image Source="{Binding IconPngData, Converter={StaticResource ByteArrayToImageSourceConverter}}"
+                               Margin="1"
+                               Stretch="Uniform"
+                               RenderOptions.BitmapScalingMode="HighQuality">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IconPngData}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock Text="{Binding PlaceholderGlyph}"
+                                   FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                   FontSize="27"
+                                   Foreground="{DynamicResource PrimaryTextBrush}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IconPngData}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                </Border>
+            </Button>
+        </Grid>
+
+        <Grid Height="5"
+              Margin="0,0,0,2"
+              VerticalAlignment="Bottom"
+              IsHitTestVisible="False">
+            <Ellipse Style="{StaticResource DockRunningIndicatorStyle}" />
+            <Border Style="{StaticResource DockActiveIndicatorStyle}" />
+        </Grid>
+
+        <Border x:Name="FileDropHighlight"
+                Margin="2,0,2,6"
+                CornerRadius="10"
+                BorderBrush="{DynamicResource DockActiveIndicatorBrush}"
+                BorderThickness="2"
+                Background="{DynamicResource DockHoverBrush}"
+                Visibility="Collapsed"
+                IsHitTestVisible="False" />
+    </Grid>
+</UserControl>

@@ -1,0 +1,104 @@
+<Window x:Class="MacWinUI.App.Views.DockWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:MacWinUI.App.Controls"
+        Title="MacWinUI Dock"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Background="Transparent"
+        SizeToContent="WidthAndHeight"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Topmost="True"
+        Focusable="False"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        FontFamily="Segoe UI Variable, Segoe UI"
+        Loaded="OnLoaded"
+        DpiChanged="OnDpiChanged"
+        SizeChanged="OnSizeChanged"
+        AllowDrop="True"
+        DragOver="OnDockDragOver"
+        DragLeave="OnDockDragLeave"
+        Drop="OnDockDrop"
+        MouseEnter="OnDockWindowMouseEnter"
+        MouseLeave="OnDockWindowMouseLeave">
+    <Grid x:Name="DockRoot"
+          Margin="10"
+          Opacity="0"
+          MouseRightButtonUp="OnDockBackgroundRightClick">
+        <Grid.RenderTransform>
+            <TranslateTransform x:Name="DockTranslate" />
+        </Grid.RenderTransform>
+        <Border Style="{StaticResource DockBackdropStyle}"
+                Opacity="{Binding Appearance.Opacity}"
+                CornerRadius="{Binding Appearance.CornerRadius, Converter={StaticResource DoubleToCornerRadiusConverter}}" />
+
+        <Border Style="{StaticResource DockInnerHighlightStyle}"
+                CornerRadius="{Binding Appearance.CornerRadius, Converter={StaticResource DoubleToCornerRadiusConverter}}" />
+
+        <Border Style="{StaticResource DockFrameStyle}"
+                CornerRadius="{Binding Appearance.CornerRadius, Converter={StaticResource DoubleToCornerRadiusConverter}}">
+            <StackPanel x:Name="DockSurface"
+                        Orientation="Horizontal"
+                        MouseMove="OnDockMouseMove"
+                        MouseLeave="OnDockMouseLeave">
+                <ItemsControl ItemsSource="{Binding ApplicationItems}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <controls:DockItemControl
+                                FilesDropped="OnDockItemFilesDropped"
+                                ContextRequested="OnDockItemContextRequested"
+                                ItemInvoked="OnDockItemInvoked"
+                                ReorderRequested="OnDockItemReorderRequested"
+                                DraggedOutside="OnDockItemDraggedOutside"
+                                IconSize="{Binding DataContext.Appearance.IconSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                ShowRunningIndicators="{Binding DataContext.Appearance.ShowRunningIndicators, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                ShowActiveIndicator="{Binding DataContext.Appearance.ShowActiveIndicator, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                ReduceMotion="{Binding DataContext.EffectiveReduceMotion, RelativeSource={RelativeSource AncestorType=ItemsControl}}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <controls:DockSeparator />
+
+                <ItemsControl ItemsSource="{Binding SystemItems}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <controls:DockItemControl
+                                FilesDropped="OnDockItemFilesDropped"
+                                ContextRequested="OnDockItemContextRequested"
+                                ItemInvoked="OnDockItemInvoked"
+                                ReorderRequested="OnDockItemReorderRequested"
+                                DraggedOutside="OnDockItemDraggedOutside"
+                                IconSize="{Binding DataContext.Appearance.IconSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                ShowRunningIndicators="{Binding DataContext.Appearance.ShowRunningIndicators, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                ShowActiveIndicator="{Binding DataContext.Appearance.ShowActiveIndicator, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                ReduceMotion="{Binding DataContext.EffectiveReduceMotion, RelativeSource={RelativeSource AncestorType=ItemsControl}}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <Border x:Name="DockDropHighlight"
+                Margin="2"
+                CornerRadius="14"
+                BorderBrush="{DynamicResource DockActiveIndicatorBrush}"
+                BorderThickness="2"
+                Background="{DynamicResource DockHoverBrush}"
+                Visibility="Collapsed"
+                IsHitTestVisible="False" />
+    </Grid>
+</Window>
