@@ -27,6 +27,7 @@ public partial class MenuBarWindow : Window
     private readonly IScreenWorkAreaReservationService _screenReservationService;
     private readonly IWindowMaterialService _windowMaterialService;
     private readonly ILogger<MenuBarWindow> _logger;
+    private readonly IApplicationExitCoordinator _exitCoordinator;
     private HwndSource? _windowSource;
     private bool _reservationRefreshQueued;
 
@@ -41,8 +42,10 @@ public partial class MenuBarWindow : Window
         IWindowMaterialService windowMaterialService,
         IScreenWorkAreaReservationService screenReservationService,
         ISystemSettingsLauncher systemSettingsLauncher,
-        ILogger<MenuBarWindow> logger)
+        ILogger<MenuBarWindow> logger,
+        IApplicationExitCoordinator exitCoordinator)
     {
+        _exitCoordinator = exitCoordinator;
         InitializeComponent();
         DataContext = viewModel;
         _controlCenterWindow = controlCenterWindow;
@@ -192,7 +195,7 @@ public partial class MenuBarWindow : Window
 
     private void OnQuitClick(object sender, RoutedEventArgs e)
     {
-        ApplicationExitCoordinator.ConfirmAndExit(this);
+        _exitCoordinator.ConfirmAndExit(this);
     }
 
     private async void OnOpenExplorerClick(object sender, RoutedEventArgs e)

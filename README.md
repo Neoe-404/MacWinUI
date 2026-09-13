@@ -7,6 +7,47 @@ Windows 11. It runs above the normal Windows shell and does not replace
 `explorer.exe`, hide the Windows taskbar, modify system files, or require
 administrator privileges.
 
+## Preview
+
+Screenshots and animated previews will be added under `docs/images/` as the
+Windows GUI is manually verified. Planned previews include the BigSur theme,
+Dark theme, Control Center, Dock drag ordering/auto-hide, and the exit flow.
+
+<!-- Add verified images here, for example:
+![MacWinUI Dock](docs/images/dock.png)
+![MacWinUI Control Center](docs/images/control-center.png)
+-->
+
+## Feature status
+
+| Feature | Status | Notes |
+|---|---|---|
+| Floating Dock | Stable | Windows 10/11 |
+| MenuBar | Stable | Optional AppBar reservation |
+| Control Center | Stable | Audio, status, and theme controls |
+| Dock drag ordering | Stable | Persisted per user |
+| DWM material | Fallback supported | Depends on Windows version and composition support |
+| GUI automation tests | Not planned | Manual desktop verification is required |
+
+## Versioning
+
+MacWinUI follows incremental milestone-based versioning. The current
+development milestone is `v0.2.15`. Milestone numbers describe the development
+roadmap and do not imply that earlier functionality is removed or disabled.
+The milestone should remain aligned across `TASK.md`, the application project
+`Version`, Git tags, and published package metadata.
+
+## Security and scope
+
+MacWinUI:
+
+- Does not require administrator privileges
+- Does not replace Explorer or modify the Windows taskbar
+- Does not inject DLLs or install global hooks
+- Does not terminate Explorer or third-party applications
+- Does not modify Windows global theme, system files, or system DLLs
+- Uses supported `ms-settings:` URIs for Windows Settings
+
 ## Current baseline
 
 - Floating, translucent, rounded Dock centered above the native Windows taskbar
@@ -51,6 +92,7 @@ administrator privileges.
 - Windows-language-aware Chinese and English primary UI resources
 - Reproducible Release publishing through `scripts\publish.ps1`
 - Confirmed exit actions in the MenuBar, Dock context menu, and Control Center
+- Unified safe-exit coordination with confirmation, settings flush, and AppBar cleanup
 - Live work-area and DPI repositioning when Windows display metrics change
 - Windows animation and high-contrast preference integration
 - Keyboard focus rings, cyclic Tab navigation, and screen-reader labels
@@ -79,7 +121,7 @@ application discovery and launching are isolated in `MacWinUI.Windows`.
 
 ## Deployment
 
-### 1. Clone the repository
+### Clone the repository
 
 ```powershell
 git clone https://github.com/Neoe-404/MacWinUI.git
@@ -89,7 +131,7 @@ Set-Location .\MacWinUI
 MacWinUI is Windows-only. Build and run it from a normal, non-administrator
 PowerShell session.
 
-### 2. Restore, build, and verify
+### Restore, build, and verify
 
 ```powershell
 dotnet restore .\MacWinUI.sln
@@ -97,7 +139,7 @@ dotnet build .\MacWinUI.sln -c Release
 dotnet test .\MacWinUI.sln -c Release --no-build
 ```
 
-### 3. Publish a deployable folder
+### Publish a deployable folder
 
 The repository includes a script that runs Release build, tests, and publish in
 that order:
@@ -115,7 +157,7 @@ The framework-dependent output is created in `artifacts\publish`. Start it with:
 Do not copy only the `.exe`; keep all files in the publish folder together. The
 current format requires the .NET 8 Desktop Runtime x64 on the target computer.
 
-### 4. Development run
+### Development run
 
 ```powershell
 dotnet run --project .\src\MacWinUI.App\MacWinUI.App.csproj
@@ -124,7 +166,7 @@ dotnet run --project .\src\MacWinUI.App\MacWinUI.App.csproj
 MacWinUI allows one running instance per Windows session. Close the existing
 instance before testing a newly built version.
 
-### 5. Optional startup shortcut
+### Optional startup shortcut
 
 1. Press `Win+R` and open `shell:startup`.
 2. Create a shortcut to the published `MacWinUI.App.exe`.
@@ -133,7 +175,7 @@ instance before testing a newly built version.
 This requires no administrator privileges and is reversed by deleting the
 shortcut.
 
-### 6. Upgrade
+### Upgrade
 
 1. Quit MacWinUI through the MenuBar, Dock context menu, or Control Center.
 2. Back up `%LocalAppData%\MacWinUI` if the layout is important.
@@ -143,9 +185,16 @@ shortcut.
 Settings use versioned schemas. Previous valid files are preserved with
 `.backup` or `.broken` suffixes when recovery is needed.
 
-### 7. Configuration and recovery
+### Configuration and recovery
 
-Per-user state is stored in:
+Per-user state is stored under `%LocalAppData%\MacWinUI`:
+
+| File | Purpose |
+|---|---|
+| `appearance.json` | Dock, theme, animation, display, and MenuBar settings |
+| `dock-apps.json` | Custom Dock items, ordering, and hidden default items |
+| `*.backup` | Previous valid configuration created before replacement |
+| `*.broken` | Damaged configuration preserved during recovery |
 
 ```text
 %LocalAppData%\MacWinUI\appearance.json
@@ -160,7 +209,21 @@ If the MenuBar reservation is not desired, disable **Reserve screen space** in
 Control Center. A normal exit releases the AppBar and restores the Windows work
 area.
 
-### 8. Uninstall
+### Safe exit
+
+MacWinUI provides three equivalent exit paths: **MacWinUI → Quit MacWinUI** in
+the MenuBar, **Quit MacWinUI** in the Dock background context menu, and the
+button at the bottom of Control Center. Each path uses the same confirmation
+flow. Canceling leaves all windows and background work running; confirming
+starts the normal WPF shutdown lifecycle, which saves pending appearance and
+Dock settings, cancels background activity, releases platform resources, and
+removes any AppBar reservation.
+
+The application does not terminate Explorer or other applications. Always use
+one of these normal exit paths when AppBar reservation is enabled so Windows'
+work area is restored cleanly.
+
+### Uninstall
 
 1. Quit MacWinUI normally so its AppBar reservation is released.
 2. Remove any shortcut from `shell:startup`.
@@ -191,6 +254,30 @@ service, modify system DLLs, or require registry cleanup.
 - Use **Reserve screen space** to keep maximized window controls below the MenuBar.
 - Quit through the application menu, Dock context menu, or Control Center so
   settings are saved and the AppBar reservation is released.
+## Validation
+
+The repository is intended to be built and tested on Windows with the pinned
+.NET 8 SDK. Inspect the local toolchain first:
+
+```powershell
+dotnet --info
+dotnet --list-sdks
+dotnet --list-runtimes
+```
+
+The repository pins the SDK version through `global.json`. Install the exact
+requested SDK version, or update `global.json` deliberately and keep the CI
+configuration in sync.
+
+```powershell
+dotnet build .\MacWinUI.sln -c Release
+dotnet test .\MacWinUI.sln -c Release --no-build
+```
+
+GUI behavior requires manual verification on a Windows desktop. In restricted
+environments without the pinned SDK or Windows desktop runtime, build and GUI
+validation cannot be completed there.
+
 ## Development mode
 
 Development is incremental. Existing working functionality is the baseline and

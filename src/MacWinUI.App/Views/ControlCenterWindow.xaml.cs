@@ -27,7 +27,10 @@ public partial class ControlCenterWindow : Window
     private DateTimeOffset _lastDeactivatedHide = DateTimeOffset.MinValue;
     private bool _suppressDeactivation;
 
+    private readonly IApplicationExitCoordinator _exitCoordinator;
+
     public ControlCenterWindow(
+        IApplicationExitCoordinator exitCoordinator,
         ControlCenterViewModel viewModel,
         DockViewModel dockViewModel,
         IAccessibilityPreferencesService accessibilityPreferencesService,
@@ -37,6 +40,7 @@ public partial class ControlCenterWindow : Window
         ISettingsTransferService settingsTransferService,
         IWindowMaterialService windowMaterialService)
     {
+        _exitCoordinator = exitCoordinator;
         InitializeComponent();
         DataContext = viewModel;
         _viewModel = viewModel;
@@ -273,6 +277,6 @@ public partial class ControlCenterWindow : Window
 
     private void OnQuitApplicationClick(object sender, RoutedEventArgs e)
     {
-        ApplicationExitCoordinator.ConfirmAndExit(this);
+        _exitCoordinator.ConfirmAndExit(this);
     }
 }

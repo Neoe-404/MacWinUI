@@ -48,6 +48,7 @@ public partial class App : Application
         var services = new ServiceCollection();
         services.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Information));
         services.AddMacWinUIWindows();
+        services.AddSingleton<IApplicationExitCoordinator, ApplicationExitCoordinator>();
         services.AddSingleton<DockAppearanceSettings>();
         services.AddSingleton<DockMagnificationEngine>();
         services.AddSingleton<DockThemeManager>();

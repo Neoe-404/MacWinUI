@@ -1,29 +1,44 @@
 using System.Windows;
+using Microsoft.Extensions.Logging;
 
 namespace MacWinUI.App.Lifecycle;
 
-public static class ApplicationExitCoordinator
+public sealed class ApplicationExitCoordinator(ILogger<ApplicationExitCoordinator> logger) : IApplicationExitCoordinator
 {
-    public static bool ConfirmAndExit(Window owner)
+    private int _exitInProgress;
+
+    public bool ConfirmAndExit(Window owner)
     {
         ArgumentNullException.ThrowIfNull(owner);
-
-        var message = Application.Current.TryFindResource("String.Exit.Message") as string
-            ?? "Quit MacWinUI? Your settings will be saved before the application closes.";
-        var title = Application.Current.TryFindResource("String.Exit.Title") as string
-            ?? "Quit MacWinUI";
-        var confirmed = MessageBox.Show(
-            owner,
-            message,
-            title,
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question,
-            MessageBoxResult.No) is MessageBoxResult.Yes;
-        if (confirmed)
+        if (Interlocked.CompareExchange(ref _exitInProgress, 1, 0) != 0)
         {
-            Application.Current.Shutdown();
+            logger.LogDebug("Ignoring duplicate application exit request.");
+            return false;
         }
 
-        return confirmed;
+        try
+        {
+            var message = Application.Current.TryFindResource("String.Exit.Message") as string
+                ?? "Quit MacWinUI? Your settings will be saved before the application closes.";
+            var title = Application.Current.TryFindResource("String.Exit.Title") as string
+                ?? "Quit MacWinUI";
+            var confirmed = MessageBox.Show(owner, message, title, MessageBoxButton.YesNo,
+                MessageBoxImage.Question, MessageBoxResult.No) is MessageBoxResult.Yes;
+            if (!confirmed)
+            {
+                Volatile.Write(ref _exitInProgress, 0);
+                logger.LogInformation("Application exit canceled by the user.");
+                return false;
+            }
+
+            logger.LogInformation("Application exit confirmed.");
+            Application.Current.Shutdown();
+            return true;
+        }
+        catch
+        {
+            Volatile.Write(ref _exitInProgress, 0);
+            throw;
+        }
     }
 }

@@ -153,7 +153,6 @@ public sealed class WindowsScreenWorkAreaReservationService(
         {
             Release(windowHandle);
         }
-
         _disposed = true;
     }
 

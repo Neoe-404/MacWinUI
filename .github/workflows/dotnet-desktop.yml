@@ -34,6 +34,12 @@ jobs:
         with:
           dotnet-version: '8.0.424'
 
+      - name: Diagnose .NET SDK
+        run: |
+          dotnet --info
+          dotnet --list-sdks
+          dotnet --list-runtimes
+
       - name: Restore
         run: dotnet restore .\MacWinUI.sln --configfile .\NuGet.Config
 

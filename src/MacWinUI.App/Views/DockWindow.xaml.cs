@@ -33,7 +33,10 @@ public partial class DockWindow : Window
     private bool _isAutoHidden;
     private bool _contextMenuOpen;
 
+    private readonly IApplicationExitCoordinator _exitCoordinator;
+
     public DockWindow(
+        IApplicationExitCoordinator exitCoordinator,
         DockViewModel viewModel,
         ControlCenterWindow controlCenterWindow,
         DockMagnificationEngine magnificationEngine,
@@ -41,6 +44,7 @@ public partial class DockWindow : Window
         IDisplayWorkAreaService displayWorkAreaService,
         IWindowMaterialService windowMaterialService)
     {
+        _exitCoordinator = exitCoordinator;
         InitializeComponent();
         DataContext = viewModel;
         _viewModel = viewModel;
@@ -429,7 +433,7 @@ public partial class DockWindow : Window
             Localized("String.Dock.Quit"),
             () =>
             {
-                ApplicationExitCoordinator.ConfirmAndExit(this);
+                _exitCoordinator.ConfirmAndExit(this);
                 return Task.CompletedTask;
             }));
         OpenContextMenu(contextMenu, DockRoot);
