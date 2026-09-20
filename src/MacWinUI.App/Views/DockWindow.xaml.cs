@@ -8,6 +8,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using MacWinUI.App.Controls;
 using MacWinUI.App.Lifecycle;
+using MacWinUI.App.Localization;
 using MacWinUI.App.ViewModels;
 using MacWinUI.Core.Accessibility;
 using MacWinUI.Core.Display;
@@ -34,6 +35,7 @@ public partial class DockWindow : Window
     private bool _contextMenuOpen;
 
     private readonly IApplicationExitCoordinator _exitCoordinator;
+    private readonly IAppLocalizationService _localization;
 
     public DockWindow(
         IApplicationExitCoordinator exitCoordinator,
@@ -42,9 +44,11 @@ public partial class DockWindow : Window
         DockMagnificationEngine magnificationEngine,
         IAccessibilityPreferencesService accessibilityPreferencesService,
         IDisplayWorkAreaService displayWorkAreaService,
-        IWindowMaterialService windowMaterialService)
+        IWindowMaterialService windowMaterialService,
+        IAppLocalizationService localization)
     {
         _exitCoordinator = exitCoordinator;
+        _localization = localization;
         InitializeComponent();
         DataContext = viewModel;
         _viewModel = viewModel;
@@ -447,8 +451,7 @@ public partial class DockWindow : Window
         };
     }
 
-    private string Localized(string resourceKey) =>
-        TryFindResource(resourceKey) as string ?? resourceKey;
+    private string Localized(string resourceKey) => _localization.GetString(resourceKey);
 
     private MenuItem CreateMenuItem(string header, Func<Task> action)
     {
@@ -483,8 +486,8 @@ public partial class DockWindow : Window
     {
         var picker = new OpenFileDialog
         {
-            Title = "Add applications or files to the Dock",
-            Filter = "All files (*.*)|*.*|Windows applications (*.exe)|*.exe",
+            Title = _localization.GetString("String.Picker.AddTitle"),
+            Filter = _localization.GetString("String.Picker.AllFiles"),
             CheckFileExists = true,
             Multiselect = true
         };

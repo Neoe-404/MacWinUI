@@ -8,10 +8,17 @@ public sealed class DockItem : ObservableObject
     private bool _isRunning;
     private byte[]? _iconPngData;
     private int _runningInstanceCount;
+    private string _displayName = string.Empty;
 
     public required string Id { get; init; }
 
-    public required string DisplayName { get; init; }
+    public required string DisplayName
+    {
+        get => _displayName;
+        set => SetProperty(ref _displayName, value);
+    }
+
+    public string? DisplayNameResourceKey { get; init; }
 
     public required LaunchType LaunchType { get; init; }
 

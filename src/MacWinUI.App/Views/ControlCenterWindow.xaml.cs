@@ -3,6 +3,8 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Animation;
 using Microsoft.Win32;
+using MacWinUI.App.Dialogs;
+using MacWinUI.App.Localization;
 using MacWinUI.App.ViewModels;
 using MacWinUI.App.Lifecycle;
 using MacWinUI.Core.Accessibility;
@@ -28,6 +30,8 @@ public partial class ControlCenterWindow : Window
     private bool _suppressDeactivation;
 
     private readonly IApplicationExitCoordinator _exitCoordinator;
+    private readonly IAppDialogService _dialogs;
+    private readonly IAppLocalizationService _localization;
 
     public ControlCenterWindow(
         IApplicationExitCoordinator exitCoordinator,
@@ -38,9 +42,13 @@ public partial class ControlCenterWindow : Window
         IDisplayWorkAreaService displayWorkAreaService,
         IScreenWorkAreaReservationService screenReservationService,
         ISettingsTransferService settingsTransferService,
-        IWindowMaterialService windowMaterialService)
+        IWindowMaterialService windowMaterialService,
+        IAppDialogService dialogs,
+        IAppLocalizationService localization)
     {
         _exitCoordinator = exitCoordinator;
+        _dialogs = dialogs;
+        _localization = localization;
         InitializeComponent();
         DataContext = viewModel;
         _viewModel = viewModel;
@@ -51,6 +59,7 @@ public partial class ControlCenterWindow : Window
         _screenReservationService = screenReservationService;
         _settingsTransferService = settingsTransferService;
         _windowMaterialService = windowMaterialService;
+        _localization.LanguageChanged += OnLanguageChanged;
     }
 
     protected override void OnSourceInitialized(EventArgs e)
@@ -72,6 +81,7 @@ public partial class ControlCenterWindow : Window
 
     protected override void OnClosed(EventArgs e)
     {
+        _localization.LanguageChanged -= OnLanguageChanged;
         _windowMaterialService.Clear(new WindowInteropHelper(this).Handle);
         base.OnClosed(e);
     }
@@ -148,6 +158,15 @@ public partial class ControlCenterWindow : Window
         Reposition();
     }
 
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        InvalidateMeasure();
+        if (IsVisible)
+        {
+            Dispatcher.BeginInvoke(Reposition);
+        }
+    }
+
     private bool ShouldReduceMotion() => AccessibilityBehavior.ShouldReduceMotion(
         _appearanceSettings.ReduceMotion,
         _accessibilityPreferencesService.GetCurrent());
@@ -195,8 +214,8 @@ public partial class ControlCenterWindow : Window
     {
         var picker = new OpenFileDialog
         {
-            Title = "Add an application or file to the Dock",
-            Filter = "All files (*.*)|*.*|Windows applications (*.exe)|*.exe",
+            Title = _localization.GetString("String.Picker.AddTitle"),
+            Filter = _localization.GetString("String.Picker.AllFiles"),
             CheckFileExists = true,
             Multiselect = false
         };
@@ -224,8 +243,8 @@ public partial class ControlCenterWindow : Window
     {
         var picker = new SaveFileDialog
         {
-            Title = "Export MacWinUI settings",
-            Filter = "MacWinUI settings (*.macwinui.json)|*.macwinui.json",
+            Title = _localization.GetString("String.Picker.ExportTitle"),
+            Filter = _localization.GetString("String.Picker.ExportFilter"),
             DefaultExt = ".macwinui.json",
             FileName = "MacWinUI-settings.macwinui.json",
             AddExtension = true
@@ -247,8 +266,8 @@ public partial class ControlCenterWindow : Window
     {
         var picker = new OpenFileDialog
         {
-            Title = "Import MacWinUI settings",
-            Filter = "MacWinUI settings (*.macwinui.json)|*.macwinui.json|JSON files (*.json)|*.json",
+            Title = _localization.GetString("String.Picker.ImportTitle"),
+            Filter = _localization.GetString("String.Picker.ImportFilter"),
             CheckFileExists = true,
             Multiselect = false
         };
@@ -260,12 +279,22 @@ public partial class ControlCenterWindow : Window
         var bundle = await _settingsTransferService.ImportAsync(picker.FileName);
         if (bundle is null)
         {
-            MessageBox.Show(
-                this,
-                "The selected settings file is unsupported or invalid.",
-                "MacWinUI Settings",
-                MessageBoxButton.OK,
-                MessageBoxImage.Warning);
+            _suppressDeactivation = true;
+            try
+            {
+                _dialogs.ShowWarning(
+                    this,
+                    _localization.GetString("String.Dialog.SettingsTitle"),
+                    _localization.GetString("String.Dialog.InvalidSettings"));
+            }
+            finally
+            {
+                _suppressDeactivation = false;
+                if (IsVisible)
+                {
+                    Activate();
+                }
+            }
             return;
         }
 
@@ -277,6 +306,18 @@ public partial class ControlCenterWindow : Window
 
     private void OnQuitApplicationClick(object sender, RoutedEventArgs e)
     {
-        _exitCoordinator.ConfirmAndExit(this);
+        _suppressDeactivation = true;
+        try
+        {
+            _exitCoordinator.ConfirmAndExit(this);
+        }
+        finally
+        {
+            _suppressDeactivation = false;
+            if (IsVisible)
+            {
+                Activate();
+            }
+        }
     }
 }

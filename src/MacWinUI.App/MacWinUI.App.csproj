@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <PlatformTarget>x64</PlatformTarget>
-    <Version>0.2.15</Version>
+    <Version>0.2.16</Version>
     <DebugType>embedded</DebugType>
     <Product>MacWinUI</Product>
     <Nullable>enable</Nullable>

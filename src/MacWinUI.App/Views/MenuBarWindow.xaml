@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:dock="clr-namespace:MacWinUI.Core.Dock;assembly=MacWinUI.Core"
-        Title="MacWinUI Menu Bar"
+        Title="{DynamicResource String.Window.MenuBarTitle}"
         Height="30"
         WindowStyle="None"
         ResizeMode="NoResize"
@@ -67,27 +67,27 @@
                               ItemContainerStyle="{StaticResource MenuBarSubMenuItemStyle}"
                               SubmenuOpened="OnViewMenuOpened">
                         <MenuItem x:Name="BigSurThemeMenuItem"
-                                  Header="BigSur Theme"
+                                  Header="{DynamicResource String.Menu.Theme.BigSur}"
                                   IsCheckable="True"
                                   Tag="{x:Static dock:DockTheme.BigSur}"
                                   Click="OnThemeClick" />
                         <MenuItem x:Name="AutoThemeMenuItem"
-                                  Header="Auto Theme"
+                                  Header="{DynamicResource String.Menu.Theme.Auto}"
                                   IsCheckable="True"
                                   Tag="{x:Static dock:DockTheme.Auto}"
                                   Click="OnThemeClick" />
                         <MenuItem x:Name="LightThemeMenuItem"
-                                  Header="Light Theme"
+                                  Header="{DynamicResource String.Menu.Theme.Light}"
                                   IsCheckable="True"
                                   Tag="{x:Static dock:DockTheme.Light}"
                                   Click="OnThemeClick" />
                         <MenuItem x:Name="DarkThemeMenuItem"
-                                  Header="Dark Theme"
+                                  Header="{DynamicResource String.Menu.Theme.Dark}"
                                   IsCheckable="True"
                                   Tag="{x:Static dock:DockTheme.Dark}"
                                   Click="OnThemeClick" />
                         <MenuItem x:Name="MagnificationMenuItem"
-                                  Header="Dock Magnification"
+                                  Header="{DynamicResource String.Menu.Magnification}"
                                   IsCheckable="True"
                                   Click="OnToggleMagnificationClick" />
                     </MenuItem>
@@ -121,7 +121,7 @@
 
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <TextBlock Text="&#xE701;"
-                           ToolTip="Network"
+                           ToolTip="{DynamicResource String.ControlCenter.Network}"
                            Visibility="{Binding ShowNetworkStatus, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock"
@@ -170,8 +170,8 @@
                 </StackPanel>
                 <Button x:Name="ControlCenterButton"
                         Style="{StaticResource MenuBarIconButtonStyle}"
-                        ToolTip="Control Center"
-                        AutomationProperties.Name="Open Control Center"
+                        ToolTip="{DynamicResource String.Menu.ControlCenter}"
+                        AutomationProperties.Name="{DynamicResource String.Automation.OpenControlCenter}"
                         Click="OnControlCenterClick">
                     <Grid Width="16" Height="13">
                         <Border Height="2"

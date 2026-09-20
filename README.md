@@ -32,7 +32,7 @@ Dark theme, Control Center, Dock drag ordering/auto-hide, and the exit flow.
 ## Versioning
 
 MacWinUI follows incremental milestone-based versioning. The current
-development milestone is `v0.2.15`. Milestone numbers describe the development
+development milestone is `v0.2.16`. Milestone numbers describe the development
 roadmap and do not imply that earlier functionality is removed or disabled.
 The milestone should remain aligned across `TASK.md`, the application project
 `Version`, Git tags, and published package metadata.
@@ -90,6 +90,8 @@ MacWinUI:
 - Existing-window activation and per-application visible window shortcuts
 - Portable settings export/import with automatic previous-version backups
 - Windows-language-aware Chinese and English primary UI resources
+- Live, persisted System / 简体中文 / English language switching across all MacWinUI windows
+- Localized status text, dialogs, file-picker labels, accessibility names, and culture-aware clock formatting
 - Reproducible Release publishing through `scripts\publish.ps1`
 - Confirmed exit actions in the MenuBar, Dock context menu, and Control Center
 - Unified safe-exit coordination with confirmation, settings flush, and AppBar cleanup
@@ -245,6 +247,7 @@ service, modify system DLLs, or require registry cleanup.
   tier, DPI scale, work area, and AppBar status.
 ## Usage
 
+- Choose **Follow system**, **简体中文**, or **English** in Control Center → Appearance; the current windows update immediately.
 - Select `BigSur`, `Auto`, `Light`, or `Dark` in Control Center → Appearance.
 - Drag applications or files onto the empty Dock surface to pin them.
 - Drop files directly onto compatible application icons to open them.
@@ -282,5 +285,5 @@ validation cannot be completed there.
 
 Development is incremental. Existing working functionality is the baseline and
 must not be removed to match an older milestone document. The current planned
-milestone is `v0.2.15 — Safe Application Exit`; see
+milestone is `v0.2.16 — Internationalization & Live Language Switching`; see
 [`TASK.md`](TASK.md) for the authoritative scope and regression policy.

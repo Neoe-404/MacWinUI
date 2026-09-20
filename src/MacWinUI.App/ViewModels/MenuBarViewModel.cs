@@ -1,5 +1,5 @@
-using System.Globalization;
 using System.Windows.Threading;
+using MacWinUI.App.Localization;
 using MacWinUI.Core.Dock;
 using MacWinUI.Core.Interfaces;
 using MacWinUI.Core.Models;
@@ -13,6 +13,7 @@ public sealed class MenuBarViewModel(
     IAudioService audioService,
     IActiveApplicationService activeApplicationService,
     DockAppearanceSettings appearanceSettings,
+    IAppLocalizationService localization,
     ILogger<MenuBarViewModel> logger) : ObservableObject, IAsyncDisposable
 {
     private bool _audioAvailable;
@@ -98,9 +99,9 @@ public sealed class MenuBarViewModel(
 
     public string VolumeToolTip => AudioAvailable
         ? IsMuted
-            ? "Sound · Muted"
-            : $"Sound · {Math.Round(VolumePercent):0}%"
-        : "Sound unavailable";
+            ? localization.GetString("String.Status.SoundMuted")
+            : localization.Format("String.Status.SoundPercent", Math.Round(VolumePercent))
+        : localization.GetString("String.Status.SoundUnavailable");
 
     private bool AudioAvailable
     {
@@ -152,6 +153,7 @@ public sealed class MenuBarViewModel(
 
         _cancellation = new CancellationTokenSource();
         appearanceSettings.PropertyChanged += OnAppearanceSettingsChanged;
+        localization.LanguageChanged += OnLanguageChanged;
         _updateTask = RunAsync(dispatcher, _cancellation.Token);
     }
 
@@ -177,6 +179,7 @@ public sealed class MenuBarViewModel(
 
         _cancellation.Dispose();
         appearanceSettings.PropertyChanged -= OnAppearanceSettingsChanged;
+        localization.LanguageChanged -= OnLanguageChanged;
         _cancellation = null;
         _updateTask = null;
     }
@@ -216,10 +219,17 @@ public sealed class MenuBarViewModel(
     }
 
     private string FormatCurrentTime() => DateTimeOffset.Now.ToString(
-        appearanceSettings.Use24HourClock
-            ? "ddd MMM d  HH:mm"
-            : "ddd MMM d  h:mm tt",
-        CultureInfo.CurrentCulture);
+        localization.GetString(
+            appearanceSettings.Use24HourClock
+                ? "String.Format.Clock24"
+                : "String.Format.Clock12"),
+        localization.EffectiveCulture);
+
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        TimeText = FormatCurrentTime();
+        OnPropertyChanged(nameof(VolumeToolTip));
+    }
 
     private void OnAppearanceSettingsChanged(
         object? sender,

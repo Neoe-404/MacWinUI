@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:models="clr-namespace:MacWinUI.Core.Models;assembly=MacWinUI.Core"
-        Title="MacWinUI Control Center"
+        Title="{DynamicResource String.Window.ControlCenterTitle}"
         Width="392"
         SizeToContent="Height"
         MaxHeight="720"
@@ -21,7 +21,7 @@
     <Grid x:Name="ControlCenterRoot"
           Margin="10"
           Opacity="0"
-          AutomationProperties.Name="MacWinUI Control Center"
+          AutomationProperties.Name="{DynamicResource String.Automation.ControlCenter}"
           KeyboardNavigation.TabNavigation="Cycle"
           KeyboardNavigation.DirectionalNavigation="Contained"
           RenderTransformOrigin="0.5,0">
@@ -46,8 +46,8 @@
 
                 <UniformGrid Columns="3" Margin="-3,0,-3,9">
                     <Button Style="{StaticResource ControlCenterActionButtonStyle}"
-                            ToolTip="Open network settings"
-                            AutomationProperties.Name="Open network settings"
+                            ToolTip="{DynamicResource String.Automation.OpenNetwork}"
+                            AutomationProperties.Name="{DynamicResource String.Automation.OpenNetwork}"
                             Command="{Binding OpenSettingsCommand}"
                             CommandParameter="{x:Static models:SystemSettingsPage.Network}">
                         <StackPanel>
@@ -70,7 +70,7 @@
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center" />
                             </Border>
-                            <TextBlock Text="Network"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.Network}"
                                        Style="{StaticResource ControlCenterSectionTitleStyle}"
                                        HorizontalAlignment="Center"
                                        Margin="0,7,0,0" />
@@ -82,8 +82,8 @@
                     </Button>
 
                     <Button Style="{StaticResource ControlCenterActionButtonStyle}"
-                            ToolTip="Open Bluetooth settings"
-                            AutomationProperties.Name="Open Bluetooth settings"
+                            ToolTip="{DynamicResource String.Automation.OpenBluetooth}"
+                            AutomationProperties.Name="{DynamicResource String.Automation.OpenBluetooth}"
                             Command="{Binding OpenSettingsCommand}"
                             CommandParameter="{x:Static models:SystemSettingsPage.Bluetooth}">
                         <StackPanel>
@@ -95,11 +95,11 @@
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center" />
                             </Border>
-                            <TextBlock Text="Bluetooth"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.Bluetooth}"
                                        Style="{StaticResource ControlCenterSectionTitleStyle}"
                                        HorizontalAlignment="Center"
                                        Margin="0,7,0,0" />
-                            <TextBlock Text="Settings"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.Settings}"
                                        Style="{StaticResource ControlCenterSecondaryTextStyle}"
                                        HorizontalAlignment="Center"
                                        Margin="0,1,0,0" />
@@ -107,8 +107,8 @@
                     </Button>
 
                     <Button Style="{StaticResource ControlCenterActionButtonStyle}"
-                            ToolTip="Open sound settings"
-                            AutomationProperties.Name="Open sound settings"
+                            ToolTip="{DynamicResource String.Automation.OpenSound}"
+                            AutomationProperties.Name="{DynamicResource String.Automation.OpenSound}"
                             Command="{Binding OpenSettingsCommand}"
                             CommandParameter="{x:Static models:SystemSettingsPage.Sound}">
                         <StackPanel>
@@ -131,7 +131,7 @@
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center" />
                             </Border>
-                            <TextBlock Text="Sound"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.Sound}"
                                        Style="{StaticResource ControlCenterSectionTitleStyle}"
                                        HorizontalAlignment="Center"
                                        Margin="0,7,0,0" />
@@ -166,9 +166,9 @@
                                        VerticalAlignment="Center" />
                         </Border>
                         <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                            <TextBlock Text="Battery"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.Battery}"
                                        Style="{StaticResource ControlCenterSectionTitleStyle}" />
-                            <TextBlock Text="Power status"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.PowerStatus}"
                                        Style="{StaticResource ControlCenterSecondaryTextStyle}"
                                        Margin="0,2,0,0" />
                         </StackPanel>
@@ -183,7 +183,7 @@
                         Margin="0,0,0,9">
                     <StackPanel>
                         <Grid Margin="2,0,2,8">
-                            <TextBlock Text="Sound"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.Sound}"
                                        Style="{StaticResource ControlCenterSectionTitleStyle}" />
                             <TextBlock Text="{Binding VolumeText}"
                                        Style="{StaticResource ControlCenterSecondaryTextStyle}"
@@ -198,14 +198,14 @@
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0"
                                     Content="{Binding MuteGlyph}"
-                                    ToolTip="Mute or unmute"
-                                    AutomationProperties.Name="Mute or unmute audio"
+                                    ToolTip="{DynamicResource String.Automation.Mute}"
+                                    AutomationProperties.Name="{DynamicResource String.Automation.Mute}"
                                     Style="{StaticResource ControlCenterIconButtonStyle}"
                                     Command="{Binding ToggleMuteCommand}"
                                     CommandParameter="{Binding IsMuted}"
                                     IsEnabled="{Binding AudioAvailable}" />
                             <Slider Grid.Column="2"
-                                    AutomationProperties.Name="System volume"
+                                    AutomationProperties.Name="{DynamicResource String.Automation.SystemVolume}"
                                     Minimum="0"
                                     Maximum="100"
                                     Value="{Binding VolumePercent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -222,15 +222,15 @@
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource String.ControlCenter.DockItems}"
                                            Style="{StaticResource ControlCenterSectionTitleStyle}" />
-                                <TextBlock Text="Applications and files"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.ApplicationsAndFiles}"
                                            Style="{StaticResource ControlCenterSecondaryTextStyle}"
                                            Margin="0,2,72,0" />
                             </StackPanel>
-                            <Button Content="Add…"
+                            <Button Content="{DynamicResource String.ControlCenter.Add}"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
-                                    ToolTip="Choose an application or file"
-                                    AutomationProperties.Name="Add an application or file to the Dock"
+                                    ToolTip="{DynamicResource String.Status.DockPrompt}"
+                                    AutomationProperties.Name="{DynamicResource String.Automation.AddDock}"
                                     Style="{StaticResource ControlCenterCompactButtonStyle}"
                                     Click="OnAddDockApplicationClick" />
                         </Grid>
@@ -241,7 +241,7 @@
                                    Margin="2,0,2,4" />
 
                         <ItemsControl ItemsSource="{Binding CustomDockItems}"
-                                      AutomationProperties.Name="Custom Dock applications">
+                                      AutomationProperties.Name="{DynamicResource String.Automation.CustomDockItems}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="2,5,2,0">
@@ -266,10 +266,10 @@
                                                    TextTrimming="CharacterEllipsis"
                                                    VerticalAlignment="Center" />
                                         <Button Grid.Column="3"
-                                                Content="Remove"
+                                                Content="{DynamicResource String.ControlCenter.Remove}"
                                                 Margin="8,0,0,0"
-                                                ToolTip="Remove from Dock"
-                                                AutomationProperties.Name="Remove application from Dock"
+                                                ToolTip="{DynamicResource String.Dock.Remove}"
+                                                AutomationProperties.Name="{DynamicResource String.Automation.RemoveDock}"
                                                 Style="{StaticResource ControlCenterCompactButtonStyle}"
                                                 Command="{Binding DataContext.RemoveDockApplicationCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                 CommandParameter="{Binding}" />
@@ -285,14 +285,32 @@
                         <Grid Margin="2,0,2,8">
                             <TextBlock Text="{DynamicResource String.ControlCenter.Appearance}"
                                        Style="{StaticResource ControlCenterSectionTitleStyle}" />
-                            <TextBlock Text="MacWinUI only"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.MacWinUIOnly}"
                                        Style="{StaticResource ControlCenterSecondaryTextStyle}"
                                        HorizontalAlignment="Right"
                                        VerticalAlignment="Center" />
                         </Grid>
                         <ListBox ItemsSource="{Binding ThemeOptions}"
-                                 AutomationProperties.Name="MacWinUI theme"
+                                 AutomationProperties.Name="{DynamicResource String.Automation.Theme}"
                                  SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"
+                                 Style="{StaticResource ControlCenterThemeListStyle}"
+                                 ItemContainerStyle="{StaticResource ControlCenterThemeItemStyle}"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ScrollViewer.VerticalScrollBarVisibility="Disabled" />
+
+                        <Border Style="{StaticResource ControlCenterDividerStyle}" />
+
+                        <Grid Margin="2,0,2,7">
+                            <TextBlock Text="{DynamicResource String.ControlCenter.Language}"
+                                       Style="{StaticResource ControlCenterSectionTitleStyle}" />
+                            <TextBlock Text="{DynamicResource String.ControlCenter.LanguageDescription}"
+                                       Style="{StaticResource ControlCenterSecondaryTextStyle}"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                        <ListBox ItemsSource="{Binding LanguageOptions}"
+                                 AutomationProperties.Name="{DynamicResource String.Automation.Language}"
+                                 SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"
                                  Style="{StaticResource ControlCenterThemeListStyle}"
                                  ItemContainerStyle="{StaticResource ControlCenterThemeItemStyle}"
                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -304,18 +322,18 @@
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource String.ControlCenter.Backup}"
                                            Style="{StaticResource ControlCenterSectionTitleStyle}" />
-                                <TextBlock Text="Export or restore appearance and Dock layout"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.BackupDescription}"
                                            Style="{StaticResource ControlCenterSecondaryTextStyle}"
                                            Margin="0,2,130,0" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal"
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Center">
-                                <Button Content="Import…"
+                                <Button Content="{DynamicResource String.ControlCenter.Import}"
                                         Style="{StaticResource ControlCenterCompactButtonStyle}"
                                         Margin="0,0,6,0"
                                         Click="OnImportSettingsClick" />
-                                <Button Content="Export…"
+                                <Button Content="{DynamicResource String.ControlCenter.Export}"
                                         Style="{StaticResource ControlCenterCompactButtonStyle}"
                                         Click="OnExportSettingsClick" />
                             </StackPanel>
@@ -324,7 +342,7 @@
                         <Border Style="{StaticResource ControlCenterDividerStyle}" />
 
                         <Grid Margin="2,0">
-                            <TextBlock Text="Dock size"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.DockSize}"
                                        Style="{StaticResource ControlCenterSectionTitleStyle}" />
                             <TextBlock Text="{Binding DockIconSizeText}"
                                        Style="{StaticResource ControlCenterSecondaryTextStyle}"
@@ -332,14 +350,14 @@
                                        VerticalAlignment="Center" />
                         </Grid>
                         <Slider Minimum="32"
-                                AutomationProperties.Name="Dock icon size"
+                                AutomationProperties.Name="{DynamicResource String.Automation.DockSize}"
                                 Maximum="64"
                                 Margin="2,5,2,5"
                                 Value="{Binding DockIconSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource ControlCenterSliderStyle}" />
 
                         <Grid Margin="2,2,2,0">
-                            <TextBlock Text="Dock opacity"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.DockOpacity}"
                                        Style="{StaticResource ControlCenterSectionTitleStyle}" />
                             <TextBlock Text="{Binding DockOpacityText}"
                                        Style="{StaticResource ControlCenterSecondaryTextStyle}"
@@ -347,7 +365,7 @@
                                        VerticalAlignment="Center" />
                         </Grid>
                         <Slider Minimum="55"
-                                AutomationProperties.Name="Dock opacity"
+                                AutomationProperties.Name="{DynamicResource String.Automation.DockOpacity}"
                                 Maximum="100"
                                 Margin="2,5,2,2"
                                 Value="{Binding DockOpacityPercent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -357,14 +375,14 @@
 
                         <Grid Margin="2,0,2,9">
                             <StackPanel>
-                                <TextBlock Text="Dock magnification"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.DockMagnification}"
                                            Style="{StaticResource ControlCenterSectionTitleStyle}" />
-                                <TextBlock Text="Magnify nearby icons"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.DockMagnificationDescription}"
                                            Style="{StaticResource ControlCenterSecondaryTextStyle}"
                                            Margin="0,2,48,0" />
                             </StackPanel>
                             <CheckBox IsChecked="{Binding EnableMagnification, Mode=TwoWay}"
-                                      AutomationProperties.Name="Dock magnification"
+                                      AutomationProperties.Name="{DynamicResource String.Automation.DockMagnification}"
                                       Style="{StaticResource ControlCenterToggleStyle}"
                                       HorizontalAlignment="Right"
                                       VerticalAlignment="Center" />
@@ -372,14 +390,14 @@
 
                         <Grid Margin="2,0,2,9">
                             <StackPanel>
-                                <TextBlock Text="Automatically hide Dock"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.AutoHide}"
                                            Style="{StaticResource ControlCenterSectionTitleStyle}" />
-                                <TextBlock Text="Reveal it at the bottom screen edge"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.AutoHideDescription}"
                                            Style="{StaticResource ControlCenterSecondaryTextStyle}"
                                            Margin="0,2,48,0" />
                             </StackPanel>
                             <CheckBox IsChecked="{Binding AutoHideDock, Mode=TwoWay}"
-                                      AutomationProperties.Name="Automatically hide Dock"
+                                      AutomationProperties.Name="{DynamicResource String.Automation.AutoHide}"
                                       Style="{StaticResource ControlCenterToggleStyle}"
                                       HorizontalAlignment="Right"
                                       VerticalAlignment="Center" />
@@ -387,21 +405,21 @@
 
                         <Grid Margin="2,0,2,9">
                             <StackPanel>
-                                <TextBlock Text="Window material"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.WindowMaterial}"
                                            Style="{StaticResource ControlCenterSectionTitleStyle}" />
-                                <TextBlock Text="Use blur when available"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.WindowMaterialDescription}"
                                            Style="{StaticResource ControlCenterSecondaryTextStyle}"
                                            Margin="0,2,48,0" />
                             </StackPanel>
                             <CheckBox IsChecked="{Binding EnableBlur, Mode=TwoWay}"
-                                      AutomationProperties.Name="Window material"
+                                      AutomationProperties.Name="{DynamicResource String.Automation.WindowMaterial}"
                                       Style="{StaticResource ControlCenterToggleStyle}"
                                       HorizontalAlignment="Right"
                                       VerticalAlignment="Center" />
                         </Grid>
 
                         <Grid Margin="2,0,2,0">
-                            <TextBlock Text="Material intensity"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.MaterialIntensity}"
                                        Style="{StaticResource ControlCenterSectionTitleStyle}" />
                             <TextBlock Text="{Binding MaterialIntensityText}"
                                        Style="{StaticResource ControlCenterSecondaryTextStyle}"
@@ -411,20 +429,20 @@
                         <Slider Minimum="35"
                                 Maximum="100"
                                 Margin="2,5,2,9"
-                                AutomationProperties.Name="Window material intensity"
+                                AutomationProperties.Name="{DynamicResource String.Automation.MaterialIntensity}"
                                 Value="{Binding MaterialIntensityPercent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource ControlCenterSliderStyle}" />
 
                         <Grid Margin="2,0">
                             <StackPanel>
-                                <TextBlock Text="Reduce motion"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.ReduceMotion}"
                                            Style="{StaticResource ControlCenterSectionTitleStyle}" />
-                                <TextBlock Text="Disable magnify, bounce and popup motion"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.ReduceMotionDescription}"
                                            Style="{StaticResource ControlCenterSecondaryTextStyle}"
                                            Margin="0,2,48,0" />
                             </StackPanel>
                             <CheckBox IsChecked="{Binding ReduceMotion, Mode=TwoWay}"
-                                      AutomationProperties.Name="Reduce motion"
+                                      AutomationProperties.Name="{DynamicResource String.Automation.ReduceMotion}"
                                       Style="{StaticResource ControlCenterToggleStyle}"
                                       HorizontalAlignment="Right"
                                       VerticalAlignment="Center" />
@@ -433,15 +451,15 @@
                         <Border Style="{StaticResource ControlCenterDividerStyle}" />
 
                         <Grid Margin="2,0,2,7">
-                            <TextBlock Text="Display"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.Display}"
                                        Style="{StaticResource ControlCenterSectionTitleStyle}" />
-                            <TextBlock Text="Placement target"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.PlacementTarget}"
                                        Style="{StaticResource ControlCenterSecondaryTextStyle}"
                                        HorizontalAlignment="Right"
                                        VerticalAlignment="Center" />
                         </Grid>
                         <ListBox ItemsSource="{Binding DisplayModes}"
-                                 AutomationProperties.Name="Display placement target"
+                                 AutomationProperties.Name="{DynamicResource String.Automation.DisplayTarget}"
                                  SelectedItem="{Binding SelectedDisplayMode, Mode=TwoWay}"
                                  Style="{StaticResource ControlCenterThemeListStyle}"
                                  ItemContainerStyle="{StaticResource ControlCenterThemeItemStyle}"
@@ -456,14 +474,14 @@
 
                         <Grid Margin="2,0,2,9">
                             <StackPanel>
-                                <TextBlock Text="Reserve screen space"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.ReserveScreenSpace}"
                                            Style="{StaticResource ControlCenterSectionTitleStyle}" />
-                                <TextBlock Text="Keep Windows controls below the Menu Bar"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.ReserveScreenSpaceDescription}"
                                            Style="{StaticResource ControlCenterSecondaryTextStyle}"
                                            Margin="0,2,48,0" />
                             </StackPanel>
                             <CheckBox IsChecked="{Binding ReserveMenuBarSpace, Mode=TwoWay}"
-                                      AutomationProperties.Name="Reserve screen space for Menu Bar"
+                                      AutomationProperties.Name="{DynamicResource String.Automation.ReserveScreenSpace}"
                                       Style="{StaticResource ControlCenterToggleStyle}"
                                       HorizontalAlignment="Right"
                                       VerticalAlignment="Center" />
@@ -471,45 +489,45 @@
 
                         <Grid Margin="2,0,2,9">
                             <StackPanel>
-                                <TextBlock Text="24-hour time"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.Use24HourTime}"
                                            Style="{StaticResource ControlCenterSectionTitleStyle}" />
-                                <TextBlock Text="Use the HH:mm clock format"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.Use24HourTimeDescription}"
                                            Style="{StaticResource ControlCenterSecondaryTextStyle}"
                                            Margin="0,2,48,0" />
                             </StackPanel>
                             <CheckBox IsChecked="{Binding Use24HourClock, Mode=TwoWay}"
-                                      AutomationProperties.Name="Use 24-hour time"
+                                      AutomationProperties.Name="{DynamicResource String.Automation.Use24HourTime}"
                                       Style="{StaticResource ControlCenterToggleStyle}"
                                       HorizontalAlignment="Right"
                                       VerticalAlignment="Center" />
                         </Grid>
 
                         <Grid Margin="2,0,2,9">
-                            <TextBlock Text="Show network"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.ShowNetwork}"
                                        Style="{StaticResource ControlCenterSectionTitleStyle}"
                                        VerticalAlignment="Center" />
                             <CheckBox IsChecked="{Binding ShowNetworkStatus, Mode=TwoWay}"
-                                      AutomationProperties.Name="Show network in Menu Bar"
+                                      AutomationProperties.Name="{DynamicResource String.Automation.ShowNetwork}"
                                       Style="{StaticResource ControlCenterToggleStyle}"
                                       HorizontalAlignment="Right" />
                         </Grid>
 
                         <Grid Margin="2,0,2,9">
-                            <TextBlock Text="Show volume"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.ShowVolume}"
                                        Style="{StaticResource ControlCenterSectionTitleStyle}"
                                        VerticalAlignment="Center" />
                             <CheckBox IsChecked="{Binding ShowVolumeStatus, Mode=TwoWay}"
-                                      AutomationProperties.Name="Show volume in Menu Bar"
+                                      AutomationProperties.Name="{DynamicResource String.Automation.ShowVolume}"
                                       Style="{StaticResource ControlCenterToggleStyle}"
                                       HorizontalAlignment="Right" />
                         </Grid>
 
                         <Grid Margin="2,0">
-                            <TextBlock Text="Show battery"
+                            <TextBlock Text="{DynamicResource String.ControlCenter.ShowBattery}"
                                        Style="{StaticResource ControlCenterSectionTitleStyle}"
                                        VerticalAlignment="Center" />
                             <CheckBox IsChecked="{Binding ShowBatteryStatus, Mode=TwoWay}"
-                                      AutomationProperties.Name="Show battery in Menu Bar"
+                                      AutomationProperties.Name="{DynamicResource String.Automation.ShowBattery}"
                                       Style="{StaticResource ControlCenterToggleStyle}"
                                       HorizontalAlignment="Right" />
                         </Grid>
@@ -518,14 +536,14 @@
 
                         <Grid Margin="2,0">
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="Reset preferences"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.ResetPreferences}"
                                            Style="{StaticResource ControlCenterSectionTitleStyle}" />
-                                <TextBlock Text="Restore safe defaults"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.ResetDescription}"
                                            Style="{StaticResource ControlCenterSecondaryTextStyle}"
                                            Margin="0,2,80,0" />
                             </StackPanel>
-                            <Button Content="Reset…"
-                                    AutomationProperties.Name="Reset appearance preferences"
+                            <Button Content="{DynamicResource String.ControlCenter.ResetButton}"
+                                    AutomationProperties.Name="{DynamicResource String.Automation.ResetPreferences}"
                                     Style="{StaticResource ControlCenterCompactButtonStyle}"
                                     HorizontalAlignment="Right"
                                     Click="OnResetSettingsClick" />
@@ -538,21 +556,21 @@
                                 CornerRadius="9"
                                 Visibility="Collapsed">
                             <StackPanel>
-                                <TextBlock Text="Reset all MacWinUI appearance preferences?"
+                                <TextBlock Text="{DynamicResource String.ControlCenter.ResetQuestion}"
                                            Style="{StaticResource ControlCenterSectionTitleStyle}"
                                            TextWrapping="Wrap" />
-                                <TextBlock Text="The Dock, Menu Bar and display settings will return to defaults."
+                                <TextBlock Text="{DynamicResource String.ControlCenter.ResetDetails}"
                                            Style="{StaticResource ControlCenterSecondaryTextStyle}"
                                            TextWrapping="Wrap"
                                            Margin="0,4,0,10" />
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Content="Cancel"
-                                            AutomationProperties.Name="Cancel reset"
+                                    <Button Content="{DynamicResource String.ControlCenter.Cancel}"
+                                            AutomationProperties.Name="{DynamicResource String.Automation.CancelReset}"
                                             Style="{StaticResource ControlCenterCompactButtonStyle}"
                                             Margin="0,0,7,0"
                                             Click="OnCancelResetClick" />
-                                    <Button Content="Reset"
-                                            AutomationProperties.Name="Confirm reset preferences"
+                                    <Button Content="{DynamicResource String.ControlCenter.Reset}"
+                                            AutomationProperties.Name="{DynamicResource String.Automation.ConfirmReset}"
                                             Style="{StaticResource ControlCenterDangerButtonStyle}"
                                             Click="OnConfirmResetClick" />
                                 </StackPanel>
@@ -570,7 +588,7 @@
                                            Margin="0,2,80,0" />
                             </StackPanel>
                             <Button Content="{DynamicResource String.ControlCenter.QuitButton}"
-                                    AutomationProperties.Name="Quit MacWinUI"
+                                    AutomationProperties.Name="{DynamicResource String.Automation.Quit}"
                                     Style="{StaticResource ControlCenterDangerButtonStyle}"
                                     HorizontalAlignment="Right"
                                     Click="OnQuitApplicationClick" />

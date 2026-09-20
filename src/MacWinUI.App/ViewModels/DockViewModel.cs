@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Input;
 using System.Windows.Threading;
+using MacWinUI.App.Localization;
 using MacWinUI.Core.Accessibility;
 using MacWinUI.Core.Dock;
 using MacWinUI.Core.Interfaces;
@@ -18,6 +19,7 @@ public sealed class DockViewModel : ObservableObject, IAsyncDisposable
     private readonly IApplicationActivityService _applicationActivityService;
     private readonly IIconService _iconService;
     private readonly ILogger<DockViewModel> _logger;
+    private readonly IAppLocalizationService _localization;
     private readonly IPinnedDockApplicationsStore _pinnedApplicationsStore;
     private readonly IReadOnlyList<DockItem> _defaultItems;
     private readonly Dictionary<string, DockItem> _defaultItemsById;
@@ -39,6 +41,7 @@ public sealed class DockViewModel : ObservableObject, IAsyncDisposable
         IPinnedDockApplicationsStore pinnedApplicationsStore,
         IAccessibilityPreferencesService accessibilityPreferencesService,
         DockAppearanceSettings appearance,
+        IAppLocalizationService localization,
         ILogger<DockViewModel> logger)
     {
         _applicationActivityService = applicationActivityService;
@@ -46,6 +49,7 @@ public sealed class DockViewModel : ObservableObject, IAsyncDisposable
         _iconService = iconService;
         _pinnedApplicationsStore = pinnedApplicationsStore;
         _accessibilityPreferencesService = accessibilityPreferencesService;
+        _localization = localization;
         _logger = logger;
 
         Items = [];
@@ -53,6 +57,7 @@ public sealed class DockViewModel : ObservableObject, IAsyncDisposable
         SystemItems = [];
         CustomItems = [];
         _defaultItems = dockItemProvider.GetDefaultItems().ToArray();
+        LocalizeDefaultItems();
         _defaultItemsById = _defaultItems.ToDictionary(
             item => item.Id,
             StringComparer.Ordinal);
@@ -107,6 +112,7 @@ public sealed class DockViewModel : ObservableObject, IAsyncDisposable
         _monitoringCancellation = new CancellationTokenSource();
         _dispatcher = dispatcher;
         Appearance.PropertyChanged += OnAppearancePropertyChanged;
+        _localization.LanguageChanged += OnLanguageChanged;
         _accessibilityPreferencesService.PreferencesChanged += OnAccessibilityPreferencesChanged;
         _iconLoadingTask = LoadIconsAsync(
             dispatcher,
@@ -150,6 +156,7 @@ public sealed class DockViewModel : ObservableObject, IAsyncDisposable
 
         _monitoringCancellation.Dispose();
         Appearance.PropertyChanged -= OnAppearancePropertyChanged;
+        _localization.LanguageChanged -= OnLanguageChanged;
         _accessibilityPreferencesService.PreferencesChanged -= OnAccessibilityPreferencesChanged;
         _monitoringCancellation = null;
         _iconLoadingTask = null;
@@ -668,6 +675,19 @@ public sealed class DockViewModel : ObservableObject, IAsyncDisposable
         }
 
         ApplySavedItemOrder();
+    }
+
+    private void OnLanguageChanged(object? sender, EventArgs e) => LocalizeDefaultItems();
+
+    private void LocalizeDefaultItems()
+    {
+        foreach (var item in _defaultItems)
+        {
+            if (!string.IsNullOrWhiteSpace(item.DisplayNameResourceKey))
+            {
+                item.DisplayName = _localization.GetString(item.DisplayNameResourceKey);
+            }
+        }
     }
 
     private void ApplySavedItemOrder()

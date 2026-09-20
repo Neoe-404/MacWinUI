@@ -1,4 +1,6 @@
 using MacWinUI.Core.Dock;
+using MacWinUI.Core.Localization;
+using System.Text.Json;
 using Xunit;
 
 namespace MacWinUI.Core.Tests.Dock;
@@ -20,6 +22,7 @@ public sealed class DockAppearanceSettingsTests
         var settings = new DockAppearanceSettings();
 
         Assert.Equal(DockTheme.BigSur, settings.Theme);
+        Assert.Equal(AppLanguage.System, settings.Language);
         Assert.Equal(DockPresentationStyle.Floating, settings.Style);
         Assert.Equal(48, settings.IconSize);
         Assert.Equal(1.5, settings.MaxScale);
@@ -64,6 +67,7 @@ public sealed class DockAppearanceSettingsTests
     {
         var settings = new DockAppearanceSettings
         {
+            Language = AppLanguage.English,
             Theme = DockTheme.Light,
             IconSize = 58,
             MaxScale = 1.7,
@@ -95,6 +99,7 @@ public sealed class DockAppearanceSettingsTests
     {
         var settings = new DockAppearanceSettings
         {
+            Language = AppLanguage.SimplifiedChinese,
             Theme = DockTheme.Dark,
             IconSize = 64,
             Opacity = 0.55,
@@ -123,7 +128,8 @@ public sealed class DockAppearanceSettingsTests
             Opacity = 4,
             MaterialIntensity = 0,
             CornerRadius = 100,
-            DisplayMode = (DockDisplayMode)99
+            DisplayMode = (DockDisplayMode)99,
+            Language = (AppLanguage)99
         });
 
         Assert.Equal(48, settings.IconSize);
@@ -132,5 +138,15 @@ public sealed class DockAppearanceSettingsTests
         Assert.Equal(0.35, settings.MaterialIntensity);
         Assert.Equal(36, settings.CornerRadius);
         Assert.Equal(DockDisplayMode.FollowCursor, settings.DisplayMode);
+        Assert.Equal(AppLanguage.System, settings.Language);
+    }
+
+    [Fact]
+    public void SchemaFiveJson_DefaultsLanguageToSystem()
+    {
+        var snapshot = JsonSerializer.Deserialize<DockAppearanceSnapshot>("{\"SchemaVersion\":5}");
+
+        Assert.NotNull(snapshot);
+        Assert.Equal(AppLanguage.System, snapshot.Language);
     }
 }

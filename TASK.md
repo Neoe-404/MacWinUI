@@ -88,67 +88,51 @@ Existing working functionality > old milestone boundaries.
 ## Current Milestone
 
 ```text
-v0.2.15 — Safe Application Exit
+v0.2.16 — Internationalization & Live Language Switching
 ```
 
 ## 当前目标
 
-以已完成的 v0.2.14 Dock Organization & Runtime Resilience 为基线，增加清晰、一致且可恢复的程序退出入口。
+以已完成的 v0.2.15 Safe Application Exit 为基线，完成简体中文与英文国际化，并支持应用内实时语言切换。
 
 本里程碑不重新实现 Dock，也不删除任何 baseline 功能。
 
 ## 当前任务必须完成
 
-### 1. Baseline 验证
+### 1. 语言基础设施
 
-- 检查当前 Solution 与项目引用方向。
-- 运行 `dotnet build`。
-- 识别并复用现有 MenuBar、系统状态、Theme 与 DI 实现。
+- 支持跟随系统、简体中文和 English 三种语言模式。
+- 语言选择保存到 appearance.json schema v6，并包含在设置导入导出中。
+- 旧 schema 缺少语言时默认跟随系统，非法值安全回退。
 
-### 2. 完善 MenuBar
+### 2. 实时切换
 
-- 保留现有时间、网络、电池和音量显示。
-- 增加明确的 Control Center 入口。
-- MenuBar 继续保持无边框、置顶、不显示任务栏按钮。
-- 不承诺搬运第三方应用的原生菜单。
+- 切换语言后现有窗口、菜单、状态文本、日期、工具提示和无障碍名称立即更新。
+- 不要求重启，不重置 Dock 顺序、主题或其他设置。
+- 当前系统语言为任意 zh-* 时使用简体中文，其余不支持语言回退英文。
 
-### 3. Control Center 基础窗口
+### 3. 文案覆盖
 
-新增可切换显示的 Floating Panel，至少包含：
+- Control Center、MenuBar、Dock 右键、文件选择器标题和应用对话框全部使用资源键。
+- 动态状态与带参数句子使用完整本地化格式模板。
+- 默认通用 Dock 项名称可本地化；第三方品牌、用户文件名和应用名保持原样。
 
-- 网络状态
-- 电池状态（没有电池时隐藏）
-- 当前系统音量与音量调节
-- MacWinUI Light / Dark / Auto Theme 切换
-- 打开 Windows 网络、蓝牙或声音设置的安全入口
+### 4. 对话框与回退
 
-窗口要求：
+- 应用对话框使用主题化、本地化按钮。
+- Windows 文件选择器自身按钮继续跟随系统语言。
+- 中文资源缺失时回退英文；全部缺失时显示资源键并记录日志。
 
-- 无边框、圆角、半透明、轻阴影
-- 从 MenuBar 右上区域打开
-- 不显示 Windows 任务栏按钮
-- 再次点击入口、按 Escape 或失去焦点时可以关闭
-- 不要求管理员权限
+### 5. 资源质量
 
-### 4. Windows 平台集成
-
-- 系统音量优先使用官方 Core Audio API。
-- 网络、电池继续复用现有低频状态服务。
-- Windows 设置入口使用受支持的 `ms-settings:` URI。
-- Windows API、COM 和 Shell 集成只能放在 MacWinUI.Windows。
-- 所有失败必须安全降级，不能导致 Dock 或 MenuBar 退出。
-
-### 5. Theme Integration
-
-- Control Center 使用现有 DynamicResource 主题系统。
-- Light / Dark / Auto 只改变 MacWinUI 自身外观。
-- 本里程碑不修改 Windows 全局主题。
-- 不在新控件中散落硬编码主题颜色。
+- 中英文资源键、非空值和格式占位符必须一致。
+- 用户可见文案不得继续硬编码在 XAML、ViewModel 或窗口事件中。
+- 内部日志保持稳定英文，不纳入 UI 翻译。
 
 ### 6. Tests
 
-- 为新增的 Core 平台无关逻辑增加单元测试。
-- 不要求复杂 WPF UI 自动化测试。
+- 为语言解析、schema 兼容和资源一致性增加自动测试。
+- 保留复杂 GUI 行为的人工验证要求。
 - 最终运行 `dotnet test`。
 
 ## v0.2.1 当前增量范围
@@ -347,6 +331,17 @@ v0.2.15 — Safe Application Exit
 - 退出标题、说明和按钮提供中英文资源。
 - 不强制结束 explorer.exe 或第三方进程，不要求管理员权限。
 
+## v0.2.16 当前增量范围
+
+- 支持跟随系统、简体中文和 English 三档应用语言选择。
+- 语言在所有已打开窗口中立即切换并持久化到 appearance.json schema v6。
+- 完整本地化 Control Center、MenuBar、Dock、状态、文件选择器标题、对话框和无障碍名称。
+- 日期时间使用当前应用语言文化与资源格式。
+- 默认通用 Dock 项名称可本地化，第三方品牌和用户内容不翻译。
+- 应用自身对话框使用主题化的本地化按钮，系统文件选择器保留 Windows 语言。
+- 中英文资源缺失时安全回退，并通过自动测试保证键、非空值与占位符一致。
+- 不修改 Windows 系统语言、区域设置、任务栏、Explorer 或系统文件。
+
 ## 当前任务禁止内容
 
 - 删除、隐藏或替换 Windows 原生任务栏
@@ -415,6 +410,7 @@ v0.2.12 Complete Dock Item Management
 v0.2.13 Reserved Menu Bar Work Area
 v0.2.14 Dock Organization & Runtime Resilience
 v0.2.15 Safe Application Exit
+v0.2.16 Internationalization & Live Language Switching
 v0.3    Spotlight
 v0.4    Launchpad
 v0.5    Mission Control

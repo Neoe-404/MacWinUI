@@ -1,9 +1,14 @@
 using System.Windows;
+using MacWinUI.App.Dialogs;
+using MacWinUI.App.Localization;
 using Microsoft.Extensions.Logging;
 
 namespace MacWinUI.App.Lifecycle;
 
-public sealed class ApplicationExitCoordinator(ILogger<ApplicationExitCoordinator> logger) : IApplicationExitCoordinator
+public sealed class ApplicationExitCoordinator(
+    IAppDialogService dialogs,
+    IAppLocalizationService localization,
+    ILogger<ApplicationExitCoordinator> logger) : IApplicationExitCoordinator
 {
     private int _exitInProgress;
 
@@ -18,12 +23,11 @@ public sealed class ApplicationExitCoordinator(ILogger<ApplicationExitCoordinato
 
         try
         {
-            var message = Application.Current.TryFindResource("String.Exit.Message") as string
-                ?? "Quit MacWinUI? Your settings will be saved before the application closes.";
-            var title = Application.Current.TryFindResource("String.Exit.Title") as string
-                ?? "Quit MacWinUI";
-            var confirmed = MessageBox.Show(owner, message, title, MessageBoxButton.YesNo,
-                MessageBoxImage.Question, MessageBoxResult.No) is MessageBoxResult.Yes;
+            var confirmed = dialogs.ShowConfirmation(
+                owner,
+                localization.GetString("String.Exit.Title"),
+                localization.GetString("String.Exit.Message"),
+                localization.GetString("String.Dialog.Quit"));
             if (!confirmed)
             {
                 Volatile.Write(ref _exitInProgress, 0);

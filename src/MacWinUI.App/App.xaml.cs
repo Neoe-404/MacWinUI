@@ -1,8 +1,9 @@
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
-using System.Globalization;
 using MacWinUI.App.Lifecycle;
+using MacWinUI.App.Localization;
+using MacWinUI.App.Dialogs;
 using MacWinUI.App.Theming;
 using MacWinUI.App.ViewModels;
 using MacWinUI.App.Views;
@@ -36,8 +37,6 @@ public partial class App : Application
     {
         base.OnStartup(e);
         RenderOptions.ProcessRenderMode = RenderMode.Default;
-        ApplyLocalizationResources();
-
         _singleInstanceGuard = SingleInstanceGuard.Acquire("Local\\MacWinUI");
         if (!_singleInstanceGuard.IsPrimaryInstance)
         {
@@ -48,6 +47,11 @@ public partial class App : Application
         var services = new ServiceCollection();
         services.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Information));
         services.AddMacWinUIWindows();
+        services.AddSingleton<IAppLocalizationService>(provider =>
+            new AppLocalizationService(
+                Resources,
+                provider.GetRequiredService<ILogger<AppLocalizationService>>()));
+        services.AddSingleton<IAppDialogService, AppDialogService>();
         services.AddSingleton<IApplicationExitCoordinator, ApplicationExitCoordinator>();
         services.AddSingleton<DockAppearanceSettings>();
         services.AddSingleton<DockMagnificationEngine>();
@@ -72,6 +76,10 @@ public partial class App : Application
         {
             _appearanceSettings.Apply(savedAppearance);
         }
+
+        _serviceProvider
+            .GetRequiredService<IAppLocalizationService>()
+            .Apply(_appearanceSettings.Language);
 
         _themeManager = _serviceProvider.GetRequiredService<DockThemeManager>();
         _themeManager.Apply(
@@ -98,19 +106,6 @@ public partial class App : Application
         _dockWindow.Show();
         _dockViewModel.Start(Dispatcher);
         _menuBarViewModel.Start(Dispatcher);
-    }
-
-    private void ApplyLocalizationResources()
-    {
-        var language = CultureInfo.CurrentUICulture.Name.StartsWith(
-            "zh",
-            StringComparison.OrdinalIgnoreCase)
-            ? "zh-CN"
-            : "en-US";
-        Resources.MergedDictionaries.Add(new ResourceDictionary
-        {
-            Source = new Uri($"Resources/Strings.{language}.xaml", UriKind.Relative)
-        });
     }
 
     protected override void OnExit(ExitEventArgs e)
@@ -157,6 +152,14 @@ public partial class App : Application
         System.ComponentModel.PropertyChangedEventArgs e)
     {
         QueueAppearanceSettingsSave();
+
+        if (e.PropertyName == nameof(DockAppearanceSettings.Language)
+            && _appearanceSettings is not null)
+        {
+            _serviceProvider?
+                .GetRequiredService<IAppLocalizationService>()
+                .Apply(_appearanceSettings.Language);
+        }
 
         if (e.PropertyName == nameof(DockAppearanceSettings.DisplayMode))
         {

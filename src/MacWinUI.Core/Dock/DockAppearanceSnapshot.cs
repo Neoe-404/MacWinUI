@@ -1,12 +1,16 @@
+using MacWinUI.Core.Localization;
+
 namespace MacWinUI.Core.Dock;
 
 public sealed record DockAppearanceSnapshot
 {
-    public const int CurrentSchemaVersion = 5;
+    public const int CurrentSchemaVersion = 6;
 
     public int SchemaVersion { get; init; } = CurrentSchemaVersion;
 
     public DockTheme Theme { get; init; } = DockTheme.BigSur;
+
+    public AppLanguage Language { get; init; } = AppLanguage.System;
 
     public DockPresentationStyle Style { get; init; } = DockPresentationStyle.Floating;
 

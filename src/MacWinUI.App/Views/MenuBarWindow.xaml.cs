@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
+using MacWinUI.App.Dialogs;
+using MacWinUI.App.Localization;
 using MacWinUI.App.ViewModels;
 using MacWinUI.App.Lifecycle;
 using MacWinUI.Core.Accessibility;
@@ -28,6 +30,8 @@ public partial class MenuBarWindow : Window
     private readonly IWindowMaterialService _windowMaterialService;
     private readonly ILogger<MenuBarWindow> _logger;
     private readonly IApplicationExitCoordinator _exitCoordinator;
+    private readonly IAppDialogService _dialogs;
+    private readonly IAppLocalizationService _localization;
     private HwndSource? _windowSource;
     private bool _reservationRefreshQueued;
 
@@ -43,9 +47,13 @@ public partial class MenuBarWindow : Window
         IScreenWorkAreaReservationService screenReservationService,
         ISystemSettingsLauncher systemSettingsLauncher,
         ILogger<MenuBarWindow> logger,
+        IAppDialogService dialogs,
+        IAppLocalizationService localization,
         IApplicationExitCoordinator exitCoordinator)
     {
         _exitCoordinator = exitCoordinator;
+        _dialogs = dialogs;
+        _localization = localization;
         InitializeComponent();
         DataContext = viewModel;
         _controlCenterWindow = controlCenterWindow;
@@ -172,13 +180,11 @@ public partial class MenuBarWindow : Window
 
     private void OnAboutClick(object sender, RoutedEventArgs e)
     {
-        var version = typeof(App).Assembly.GetName().Version?.ToString(3) ?? "0.2.9";
-        MessageBox.Show(
+        var version = typeof(App).Assembly.GetName().Version?.ToString(3) ?? "0.2.16";
+        _dialogs.ShowInfo(
             this,
-            $"MacWinUI {version}\n\nA safe, macOS-inspired Windows desktop enhancement.\nThe native Windows taskbar and Explorer remain unchanged.",
-            "About MacWinUI",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+            _localization.GetString("String.Dialog.AboutTitle"),
+            _localization.Format("String.Dialog.AboutMessage", version));
     }
 
     private async void OnShowControlCenterClick(object sender, RoutedEventArgs e)
@@ -200,15 +206,17 @@ public partial class MenuBarWindow : Window
 
     private async void OnOpenExplorerClick(object sender, RoutedEventArgs e)
     {
-        await LaunchTargetAsync("explorer.exe", "File Explorer");
+        await LaunchTargetAsync(
+            "explorer.exe",
+            _localization.GetString("String.DockItem.FileExplorer"));
     }
 
     private async void OnAddDockItemClick(object sender, RoutedEventArgs e)
     {
         var picker = new OpenFileDialog
         {
-            Title = "Add applications or files to the Dock",
-            Filter = "All files (*.*)|*.*|Windows applications (*.exe)|*.exe",
+            Title = _localization.GetString("String.Picker.AddTitle"),
+            Filter = _localization.GetString("String.Picker.AllFiles"),
             CheckFileExists = true,
             Multiselect = true
         };
@@ -300,15 +308,10 @@ public partial class MenuBarWindow : Window
 
     private void OnShowTipsClick(object sender, RoutedEventArgs e)
     {
-        MessageBox.Show(
+        _dialogs.ShowInfo(
             this,
-            "• Drag an application or file onto an empty Dock area to pin it.\n" +
-            "• Drag files onto a compatible application icon to open them.\n" +
-            "• Open Control Center to remove custom items or adjust appearance.\n" +
-            "• Press Escape to close Control Center.",
-            "Dock Drag & Drop Tips",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+            _localization.GetString("String.Dialog.TipsTitle"),
+            _localization.GetString("String.Dialog.TipsMessage"));
     }
 
     private void OnShowDiagnosticsClick(object sender, RoutedEventArgs e)
@@ -318,18 +321,25 @@ public partial class MenuBarWindow : Window
             ? _displayWorkAreaService.GetPrimaryWorkArea()
             : _displayWorkAreaService.GetActiveWorkArea();
         var renderingTier = RenderCapability.Tier >> 16;
-        MessageBox.Show(
+        var enabled = _localization.GetString("String.Status.Enabled");
+        var disabled = _localization.GetString("String.Status.Disabled");
+        var displayMode = _localization.GetString(
+            _appearanceSettings.DisplayMode is DockDisplayMode.Primary
+                ? "String.Option.Display.Primary"
+                : "String.Option.Display.FollowCursor");
+        _dialogs.ShowInfo(
             this,
-            $"Version: {typeof(App).Assembly.GetName().Version?.ToString(3)}\n" +
-            $"Rendering tier: {renderingTier} (2 = hardware accelerated)\n" +
-            $"DPI scale: {dpi.DpiScaleX:0.##} × {dpi.DpiScaleY:0.##}\n" +
-            $"Work area: {workArea.Width:0} × {workArea.Height:0} at {workArea.Left:0},{workArea.Top:0}\n" +
-            $"MenuBar reservation: {_screenReservationService.HasActiveReservation}\n" +
-            $"Display mode: {_appearanceSettings.DisplayMode}\n" +
-            $"Reduce motion: {_dockViewModel.EffectiveReduceMotion}",
-            "MacWinUI Runtime Diagnostics",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+            _localization.GetString("String.Dialog.DiagnosticsTitle"),
+            _localization.Format(
+                "String.Dialog.DiagnosticsMessage",
+                typeof(App).Assembly.GetName().Version?.ToString(3) ?? string.Empty,
+                renderingTier,
+                dpi.DpiScaleX,
+                workArea.Width,
+                workArea.Height,
+                _screenReservationService.HasActiveReservation ? enabled : disabled,
+                displayMode,
+                _dockViewModel.EffectiveReduceMotion ? enabled : disabled));
     }
 
     private async Task LaunchTargetAsync(string target, string displayName)

@@ -1,8 +1,10 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Input;
+using MacWinUI.App.Localization;
 using MacWinUI.Core.Dock;
 using MacWinUI.Core.Interfaces;
+using MacWinUI.Core.Localization;
 using MacWinUI.Core.Models;
 using MacWinUI.Core.System;
 using MacWinUI.Core.Utilities;
@@ -16,6 +18,7 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
     private readonly DockAppearanceSettings _appearanceSettings;
     private readonly DockViewModel _dockViewModel;
     private readonly ILogger<ControlCenterViewModel> _logger;
+    private readonly IAppLocalizationService _localization;
     private readonly ISystemSettingsLauncher _settingsLauncher;
     private readonly ISystemStatusService _systemStatusService;
     private bool _audioAvailable;
@@ -26,7 +29,7 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
     private bool _isNetworkAvailable;
     private bool _isRefreshing;
     private double _volumePercent;
-    private string _dockApplicationsStatusText = "Choose an application or file to keep it in the Dock.";
+    private string _dockApplicationsStatusText = string.Empty;
     private CancellationTokenSource? _volumeUpdateCancellation;
     private Task? _volumeUpdateTask;
 
@@ -36,6 +39,7 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
         ISystemStatusService systemStatusService,
         DockAppearanceSettings appearanceSettings,
         DockViewModel dockViewModel,
+        IAppLocalizationService localization,
         ILogger<ControlCenterViewModel> logger)
     {
         _audioService = audioService;
@@ -43,14 +47,12 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
         _systemStatusService = systemStatusService;
         _appearanceSettings = appearanceSettings;
         _dockViewModel = dockViewModel;
+        _localization = localization;
         _logger = logger;
 
-        ThemeOptions = Enum.GetValues<DockTheme>();
-        DisplayModes =
-        [
-            new DockDisplayModeOption(DockDisplayMode.FollowCursor, "Follow cursor"),
-            new DockDisplayModeOption(DockDisplayMode.Primary, "Primary")
-        ];
+        RebuildLocalizedOptions();
+        _dockApplicationsStatusText = localization.GetString("String.Status.DockPrompt");
+        localization.LanguageChanged += OnLanguageChanged;
         OpenSettingsCommand = new AsyncRelayCommand<SystemSettingsPage>(
             settingsLauncher.OpenAsync,
             exception => logger.LogWarning(exception, "Could not open Windows Settings."));
@@ -63,9 +65,11 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
             item => item.IsCustom);
     }
 
-    public IReadOnlyList<DockTheme> ThemeOptions { get; }
+    public IReadOnlyList<LocalizedOption<DockTheme>> ThemeOptions { get; private set; } = [];
 
-    public IReadOnlyList<DockDisplayModeOption> DisplayModes { get; }
+    public IReadOnlyList<LocalizedOption<AppLanguage>> LanguageOptions { get; private set; } = [];
+
+    public IReadOnlyList<LocalizedOption<DockDisplayMode>> DisplayModes { get; private set; } = [];
 
     public ICommand OpenSettingsCommand { get; }
 
@@ -91,10 +95,10 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
         DockApplicationsStatusText = result switch
         {
             AddDockApplicationResult.Added =>
-                $"{Path.GetFileName(executablePath)} was added to the Dock.",
+                _localization.Format("String.Status.DockAdded", Path.GetFileName(executablePath)),
             AddDockApplicationResult.AlreadyPinned =>
-                "That application is already in the Dock.",
-            _ => "Choose an existing application or file."
+                _localization.GetString("String.Status.DockAlreadyPinned"),
+            _ => _localization.GetString("String.Status.DockInvalid")
         };
     }
 
@@ -110,7 +114,8 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
         }
     }
 
-    public string NetworkStatusText => IsNetworkAvailable ? "Connected" : "Not connected";
+    public string NetworkStatusText => _localization.GetString(
+        IsNetworkAvailable ? "String.Status.Connected" : "String.Status.NotConnected");
 
     public int? BatteryPercentage
     {
@@ -140,8 +145,10 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
     public bool HasBattery => BatteryPercentage.HasValue;
 
     public string BatteryStatusText => BatteryPercentage is { } percentage
-        ? $"{percentage}%{(IsCharging ? " · Charging" : string.Empty)}"
-        : "No battery";
+        ? _localization.Format(
+            IsCharging ? "String.Status.Charging" : "String.Status.BatteryPercent",
+            percentage)
+        : _localization.GetString("String.Status.NoBattery");
 
     public bool AudioAvailable
     {
@@ -170,7 +177,7 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
 
     public string VolumeText => AudioAvailable
         ? $"{Math.Round(VolumePercent):0}%"
-        : "Unavailable";
+        : _localization.GetString("String.Status.Unavailable");
 
     public bool IsMuted
     {
@@ -186,17 +193,32 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
 
     public string MuteGlyph => IsMuted ? "\uE74F" : "\uE767";
 
-    public DockTheme SelectedTheme
+    public LocalizedOption<DockTheme> SelectedTheme
     {
-        get => _appearanceSettings.Theme;
+        get => ThemeOptions.First(option => option.Value == _appearanceSettings.Theme);
         set
         {
-            if (_appearanceSettings.Theme == value)
+            if (value is null || _appearanceSettings.Theme == value.Value)
             {
                 return;
             }
 
-            _appearanceSettings.Theme = value;
+            _appearanceSettings.Theme = value.Value;
+            OnPropertyChanged();
+        }
+    }
+
+    public LocalizedOption<AppLanguage> SelectedLanguage
+    {
+        get => LanguageOptions.First(option => option.Value == _appearanceSettings.Language);
+        set
+        {
+            if (value is null || _appearanceSettings.Language == value.Value)
+            {
+                return;
+            }
+
+            _appearanceSettings.Language = value.Value;
             OnPropertyChanged();
         }
     }
@@ -318,7 +340,7 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
         }
     }
 
-    public DockDisplayModeOption SelectedDisplayMode
+    public LocalizedOption<DockDisplayMode> SelectedDisplayMode
     {
         get => DisplayModes.First(option => option.Value == _appearanceSettings.DisplayMode);
         set
@@ -411,6 +433,7 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
     public void NotifyAppearancePreferencesChanged()
     {
         OnPropertyChanged(nameof(SelectedTheme));
+        OnPropertyChanged(nameof(SelectedLanguage));
         OnPropertyChanged(nameof(DockIconSize));
         OnPropertyChanged(nameof(DockIconSizeText));
         OnPropertyChanged(nameof(DockOpacityPercent));
@@ -466,6 +489,7 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        _localization.LanguageChanged -= OnLanguageChanged;
         _volumeUpdateCancellation?.Cancel();
         if (_volumeUpdateTask is not null)
         {
@@ -504,7 +528,9 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
         CancellationToken cancellationToken)
     {
         await _dockViewModel.RemoveCustomApplicationAsync(item, cancellationToken);
-        DockApplicationsStatusText = $"{item.DisplayName} was removed from the Dock.";
+        DockApplicationsStatusText = _localization.Format(
+            "String.Status.DockRemoved",
+            item.DisplayName);
     }
 
     private void QueueVolumeUpdate(double volumePercent)
@@ -559,11 +585,52 @@ public sealed class ControlCenterViewModel : ObservableObject, IAsyncDisposable
             await _audioService
                 .GetStateAsync(cancellationToken));
     }
+
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        RebuildLocalizedOptions();
+        DockApplicationsStatusText = _localization.GetString("String.Status.DockPrompt");
+        OnPropertyChanged(nameof(ThemeOptions));
+        OnPropertyChanged(nameof(LanguageOptions));
+        OnPropertyChanged(nameof(DisplayModes));
+        OnPropertyChanged(nameof(SelectedTheme));
+        OnPropertyChanged(nameof(SelectedLanguage));
+        OnPropertyChanged(nameof(SelectedDisplayMode));
+        OnPropertyChanged(nameof(NetworkStatusText));
+        OnPropertyChanged(nameof(BatteryStatusText));
+        OnPropertyChanged(nameof(VolumeText));
+    }
+
+    private void RebuildLocalizedOptions()
+    {
+        ThemeOptions =
+        [
+            Option(DockTheme.BigSur, "String.Option.Theme.BigSur"),
+            Option(DockTheme.Auto, "String.Option.Theme.Auto"),
+            Option(DockTheme.Light, "String.Option.Theme.Light"),
+            Option(DockTheme.Dark, "String.Option.Theme.Dark")
+        ];
+        LanguageOptions =
+        [
+            Option(AppLanguage.System, "String.Option.Language.System"),
+            Option(AppLanguage.SimplifiedChinese, "String.Option.Language.SimplifiedChinese"),
+            Option(AppLanguage.English, "String.Option.Language.English")
+        ];
+        DisplayModes =
+        [
+            Option(DockDisplayMode.FollowCursor, "String.Option.Display.FollowCursor"),
+            Option(DockDisplayMode.Primary, "String.Option.Display.Primary")
+        ];
+    }
+
+    private LocalizedOption<T> Option<T>(T value, string key) where T : struct, Enum =>
+        new(value, _localization.GetString(key));
 }
 
-public sealed record DockDisplayModeOption(
-    DockDisplayMode Value,
+public sealed record LocalizedOption<T>(
+    T Value,
     string Label)
+    where T : struct, Enum
 {
     public override string ToString() => Label;
 }

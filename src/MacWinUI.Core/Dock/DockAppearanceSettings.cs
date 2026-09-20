@@ -1,4 +1,5 @@
 using MacWinUI.Core.Utilities;
+using MacWinUI.Core.Localization;
 
 namespace MacWinUI.Core.Dock;
 
@@ -29,6 +30,15 @@ public sealed class DockAppearanceSettings : ObservableObject
     private bool _showRunningIndicators = true;
     private DockPresentationStyle _style = DockPresentationStyle.Floating;
     private DockTheme _theme = DockTheme.BigSur;
+    private AppLanguage _language = AppLanguage.System;
+
+    public AppLanguage Language
+    {
+        get => _language;
+        set => SetProperty(
+            ref _language,
+            Enum.IsDefined(value) ? value : AppLanguage.System);
+    }
 
     public DockTheme Theme
     {
@@ -156,6 +166,7 @@ public sealed class DockAppearanceSettings : ObservableObject
 
     public DockAppearanceSnapshot CreateSnapshot() => new()
     {
+        Language = Language,
         Theme = Theme,
         Style = Style,
         IconSize = IconSize,
@@ -181,6 +192,7 @@ public sealed class DockAppearanceSettings : ObservableObject
     {
         ArgumentNullException.ThrowIfNull(snapshot);
 
+        Language = snapshot.Language;
         Theme = snapshot.Theme;
         Style = snapshot.Style;
         IconSize = snapshot.IconSize;

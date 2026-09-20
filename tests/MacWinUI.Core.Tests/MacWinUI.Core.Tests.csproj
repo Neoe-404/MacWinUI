@@ -17,4 +17,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\MacWinUI.Core\MacWinUI.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\src\MacWinUI.App\Resources\Strings.en-US.xaml"
+             Link="Localization\Strings.en-US.xaml"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\src\MacWinUI.App\Resources\Strings.zh-CN.xaml"
+             Link="Localization\Strings.zh-CN.xaml"
+             CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

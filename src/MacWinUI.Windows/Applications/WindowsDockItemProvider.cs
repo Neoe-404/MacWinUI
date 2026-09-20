@@ -28,6 +28,7 @@ public sealed class WindowsDockItemProvider : IDockItemProvider
         {
             Id = "explorer",
             DisplayName = "File Explorer",
+            DisplayNameResourceKey = "String.DockItem.FileExplorer",
             LaunchType = LaunchType.Shell,
             LaunchTarget = "explorer.exe",
             ProcessName = "explorer",
@@ -62,6 +63,9 @@ public sealed class WindowsDockItemProvider : IDockItemProvider
             DisplayName = isTerminalAvailable
                 ? "Windows Terminal"
                 : "Command Prompt (Terminal fallback)",
+            DisplayNameResourceKey = isTerminalAvailable
+                ? null
+                : "String.DockItem.CommandPromptFallback",
             LaunchType = isTerminalAvailable ? LaunchType.Executable : LaunchType.Shell,
             LaunchTarget = terminalPath ?? "cmd.exe",
             ProcessName = isTerminalAvailable ? "WindowsTerminal" : "cmd",
@@ -80,6 +84,9 @@ public sealed class WindowsDockItemProvider : IDockItemProvider
             DisplayName = isCodeAvailable
                 ? "Visual Studio Code"
                 : "Notepad (VS Code fallback)",
+            DisplayNameResourceKey = isCodeAvailable
+                ? null
+                : "String.DockItem.NotepadFallback",
             LaunchType = isCodeAvailable ? LaunchType.Executable : LaunchType.Shell,
             LaunchTarget = codePath ?? "notepad.exe",
             ProcessName = isCodeAvailable ? "Code" : "notepad",
@@ -96,6 +103,7 @@ public sealed class WindowsDockItemProvider : IDockItemProvider
         {
             Id = "windows-settings",
             DisplayName = "Windows Settings",
+            DisplayNameResourceKey = "String.DockItem.WindowsSettings",
             LaunchType = LaunchType.Uri,
             LaunchTarget = "ms-settings:",
             ProcessName = "SystemSettings",
